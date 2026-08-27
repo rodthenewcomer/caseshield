@@ -50,7 +50,10 @@ test("serves the funnel to an authorized reader and blocks indexing", async () =
     assert.equal(response.statusCode, 200);
     assert.equal(response.payload.ok, true);
     assert.equal(response.payload.configured, false);
-    assert.equal(response.payload.steps.length, 12);
+    assert.equal(response.payload.core.length, 8, "core funnel stages");
+    assert.ok("actions" in response.payload, "qualified actions reported");
+    assert.equal(response.payload.headline.qualified_wtp_pct, null);
+    assert.deepEqual(response.payload.campaigns, []);
     assert.equal(response.headers["x-robots-tag"], "noindex, nofollow");
     assert.equal(response.headers["cache-control"], "no-store, max-age=0");
   } finally {

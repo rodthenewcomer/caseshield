@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from "node:crypto";
-import { readFunnel } from "../lib/store.mjs";
+import { readFunnel } from "../lib/funnel.mjs";
 
 /**
  * Internal validation funnel API.

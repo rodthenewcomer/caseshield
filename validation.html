@@ -14,8 +14,9 @@
         <p class="kicker">Internal · not public</p>
         <h1>Validation funnel</h1>
         <p class="sub">
-          Unique sessions per stage. A visitor who reloads five times counts
-          once, so these numbers read as people rather than hits.
+          Every number below counts unique sessions, not events. A visitor who
+          reloads five times is one person, and the decision metric counts only
+          intents from visitors who actually completed a case check.
         </p>
       </header>
 
@@ -30,7 +31,7 @@
           />
           <button id="load" type="button" class="btn">Load</button>
         </div>
-        <p class="note" id="gateNote">
+        <p class="note">
           Held in this tab only (sessionStorage). Never sent anywhere but this
           site's own API.
         </p>
@@ -41,29 +42,83 @@
       </section>
 
       <section id="results" hidden>
+        <p class="sample" id="sample"></p>
+
+        <h2 class="h2">Qualified willingness to pay</h2>
+        <p class="sub" id="wtpDefinition"></p>
         <div class="cards" id="headline"></div>
-        <h2 class="h2">Stage by stage</h2>
+
+        <h2 class="h2">Core funnel</h2>
+        <p class="sub">
+          The mandatory path. Optional actions are reported separately so they
+          never distort a stage conversion.
+        </p>
         <div class="tableWrap">
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">Stage</th>
                 <th scope="col" class="num">Unique</th>
-                <th scope="col" class="num">Total</th>
+                <th scope="col" class="num">Events</th>
                 <th scope="col" class="num">Reach</th>
                 <th scope="col" class="num">From previous</th>
               </tr>
             </thead>
-            <tbody id="rows"></tbody>
+            <tbody id="coreRows"></tbody>
           </table>
         </div>
 
-        <h2 class="h2">Recent answer mix</h2>
+        <h2 class="h2">Optional actions, measured against completers</h2>
         <p class="sub">
-          Distribution across the last stored events — use it to see which
-          segments actually complete, not just how many.
+          Each row is |completed &cap; action| ÷ |completed|. "All sessions"
+          includes visitors who never completed a case check.
         </p>
-        <div class="cards" id="segments"></div>
+        <div class="tableWrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Action</th>
+                <th scope="col" class="num">From completers</th>
+                <th scope="col" class="num">Rate</th>
+                <th scope="col" class="num">All sessions</th>
+              </tr>
+            </thead>
+            <tbody id="actionRows"></tbody>
+          </table>
+        </div>
+
+        <h2 class="h2">Acquisition</h2>
+        <p class="sub">
+          Unique sessions per cohort. Qualified WTP is computed inside each
+          cohort, so a campaign is judged on the visitors it actually sent.
+        </p>
+        <div class="tableWrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Source</th>
+                <th scope="col">Medium</th>
+                <th scope="col">Campaign</th>
+                <th scope="col">Content</th>
+                <th scope="col">Term</th>
+                <th scope="col" class="num">Sessions</th>
+                <th scope="col" class="num">Starts</th>
+                <th scope="col" class="num">Completions</th>
+                <th scope="col" class="num">Compl. rate</th>
+                <th scope="col" class="num">Qual. intents</th>
+                <th scope="col" class="num">Qual. WTP</th>
+              </tr>
+            </thead>
+            <tbody id="campaignRows"></tbody>
+          </table>
+        </div>
+
+        <h2 class="h2">Problem mix</h2>
+        <p class="sub">
+          Unique sessions per answer — not event occurrences, so one visitor
+          cannot count five times.
+        </p>
+        <div id="answers"></div>
       </section>
     </main>
     <script type="module" src="/validation.js"></script>

@@ -1,4 +1,8 @@
 import { createCasePlan } from "/intelligence.js";
+import {
+  attributionPayload,
+  heroVariant,
+} from "/acquisition.js";
 
 (() => {
   const SESSION_KEY = "caseshield_validation_id";
@@ -109,26 +113,92 @@ import { createCasePlan } from "/intelligence.js";
     },
   ];
 
-  const icons = {
-    "calendar-x": "✕",
-    calendar: "▣",
-    clock: "◷",
-    document: "▤",
-    search: "⌕",
-    hourglass: "⌛",
-    alert: "!",
-    more: "···",
-    heart: "♡",
-    family: "◉",
-    people: "◌",
-    ring: "◇",
-    briefcase: "▱",
-    globe: "◎",
-    bolt: "ϟ",
-    pulse: "⌁",
-    shield: "♢",
-    help: "?",
+  /**
+   * Local SVG icon system. Unicode symbols read as a coded prototype; these
+   * are drawn as consistent 24x24 stroke paths, styled through currentColor
+   * so they inherit state colours without inline styles (strict CSP).
+   */
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const ICON_PATHS = {
+    calendar: [
+      "M4 5h16a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z",
+      "M3 10h18",
+      "M8 3v4",
+      "M16 3v4",
+    ],
+    "calendar-x": [
+      "M4 5h16a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z",
+      "M3 10h18",
+      "M8 3v4",
+      "M16 3v4",
+      "M10 14l4 4",
+      "M14 14l-4 4",
+    ],
+    clock: ["M12 21a9 9 0 100-18 9 9 0 000 18z", "M12 7.5V12l3 2"],
+    document: [
+      "M14 3H7a1 1 0 00-1 1v16a1 1 0 001 1h10a1 1 0 001-1V7z",
+      "M14 3v4h4",
+      "M9 13h6",
+      "M9 17h4",
+    ],
+    search: ["M11 19a8 8 0 100-16 8 8 0 000 16z", "M21 21l-4.3-4.3"],
+    hourglass: [
+      "M7 3h10",
+      "M7 21h10",
+      "M17 3v4l-5 5 5 5v4",
+      "M7 3v4l5 5-5 5v4",
+    ],
+    alert: [
+      "M10.3 4.3L2.6 18a2 2 0 001.7 3h15.4a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z",
+      "M12 9.5v4",
+      "M12 17.5h.01",
+    ],
+    more: ["M5 12h.01", "M12 12h.01", "M19 12h.01"],
+    heart: ["M12 20s-7-4.4-7-9.4A4 4 0 0112 7.2 4 4 0 0119 10.6c0 5-7 9.4-7 9.4z"],
+    family: [
+      "M8.5 11a3 3 0 100-6 3 3 0 000 6z",
+      "M2.5 20c0-3.3 2.7-6 6-6s6 2.7 6 6",
+      "M16 6.2a3 3 0 010 5.6",
+      "M17.5 14.2c2.4.5 4 2.6 4 5.8",
+    ],
+    people: [
+      "M12 11.5a4 4 0 100-8 4 4 0 000 8z",
+      "M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8",
+    ],
+    ring: ["M12 21a7 7 0 100-14 7 7 0 000 14z", "M9 7.4L12 3l3 4.4"],
+    briefcase: [
+      "M4 8h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z",
+      "M9 8V5.5a1 1 0 011-1h4a1 1 0 011 1V8",
+      "M3 13h18",
+    ],
+    globe: [
+      "M12 21a9 9 0 100-18 9 9 0 000 18z",
+      "M3 12h18",
+      "M12 3a14 14 0 000 18 14 14 0 000-18",
+    ],
+    bolt: ["M13 2.5L4.5 14H11l-1 7.5L19.5 10H13z"],
+    pulse: ["M3 12h3.8L9 5.5l4 13 2.2-6.5H21"],
+    shield: ["M12 3l8 3v6c0 5-3.4 8.2-8 9.2C7.4 20.2 4 17 4 12V6z"],
+    help: [
+      "M12 21a9 9 0 100-18 9 9 0 000 18z",
+      "M9.6 9.2a2.5 2.5 0 014.9.6c0 1.7-2.5 2-2.5 3.8",
+      "M12 17.2h.01",
+    ],
   };
+
+  function iconNode(name) {
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("class", "icon");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    for (const definition of ICON_PATHS[name] || ICON_PATHS.more) {
+      const path = document.createElementNS(SVG_NS, "path");
+      path.setAttribute("d", definition);
+      svg.append(path);
+    }
+    return svg;
+  }
 
   const $ = (id) => document.getElementById(id);
   const assessmentShell = $("assessmentShell");
@@ -162,7 +232,12 @@ import { createCasePlan } from "/intelligence.js";
   }
 
   async function track(name, meta = {}) {
-    const payload = { name, session_id: getSessionId(), ...meta };
+    const payload = {
+      name,
+      session_id: getSessionId(),
+      ...attributionPayload(),
+      ...meta,
+    };
     try {
       await fetch("/api/event", {
         method: "POST",
@@ -194,18 +269,41 @@ import { createCasePlan } from "/intelligence.js";
     };
   }
 
+  function setMobileCtaHidden(hidden) {
+    mobileCta?.classList.toggle("hidden", hidden);
+  }
+
+  /**
+   * The sticky CTA previously vanished past an arbitrary 500px of scroll, so
+   * a visitor simply reading the page on a phone lost the primary action. It
+   * now hides only once the assessment is genuinely on screen, or once the
+   * visitor has actually started it.
+   */
+  if (mobileCta && "IntersectionObserver" in window) {
+    const checkObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setMobileCtaHidden(entry.isIntersecting || state.started);
+        });
+      },
+      { threshold: 0.3 },
+    );
+    checkObserver.observe($("check"));
+  }
+
   function markStarted() {
     if (state.started) return;
     state.started = true;
+    setMobileCtaHidden(true);
     track("case_check_started");
   }
 
   function scrollToCheck(source) {
-    markStarted();
+    // Intent to begin only. case_check_started fires on the first real
+    // interaction with a question, so the two metrics stay distinguishable.
     renderStep();
     track("hero_cta_click", { source });
     $("check").scrollIntoView({ behavior: "smooth", block: "start" });
-    mobileCta?.classList.add("hidden");
   }
 
   document.querySelectorAll("[data-scroll-check]").forEach((control) => {
@@ -302,14 +400,15 @@ import { createCasePlan } from "/intelligence.js";
         button.type = "button";
         button.dataset.choice = label;
         button.setAttribute("aria-pressed", String(saved === label));
-        const iconNode = element("span", "choice-icon", icons[icon] || "•");
-        iconNode.setAttribute("aria-hidden", "true");
+        const iconWrap = element("span", "choice-icon");
+        iconWrap.setAttribute("aria-hidden", "true");
+        iconWrap.append(iconNode(icon));
         const copy = element("span", "choice-text");
         copy.append(
           element("strong", "", label),
           element("small", "", description),
         );
-        button.append(iconNode, copy);
+        button.append(iconWrap, copy);
         button.addEventListener("click", () => {
           markStarted();
           state.answers[step.id] = label;
@@ -352,6 +451,7 @@ import { createCasePlan } from "/intelligence.js";
   }
 
   function nextStep() {
+    markStarted();
     const step = steps[state.step];
     const value = step.input
       ? $("embassyInput")?.value.trim() || ""
@@ -413,7 +513,7 @@ import { createCasePlan } from "/intelligence.js";
     snapshot.hidden = false;
     snapshot.scrollIntoView({ behavior: "smooth", block: "center" });
     $("snapshotTitle").focus?.({ preventScroll: true });
-    mobileCta?.classList.add("hidden");
+    setMobileCtaHidden(true);
   }
 
   $("resetAssessment").addEventListener("click", () => {
@@ -425,6 +525,13 @@ import { createCasePlan } from "/intelligence.js";
     snapshot.hidden = true;
     renderStep();
     $("assessmentQuestion").focus({ preventScroll: true });
+  });
+
+  // Bridges the aha moment to the offer without pushing it: this records
+  // interest and scrolls, but must never imply purchase intent by itself.
+  $("resultOfferLink")?.addEventListener("click", () => {
+    track("result_offer_click", sanitizeAnswers(state.answers));
+    $("pricing").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   $("alertIntent").addEventListener("click", () => {
@@ -503,16 +610,37 @@ import { createCasePlan } from "/intelligence.js";
     revealElements.forEach((item) => item.classList.add("is-visible"));
   }
 
+  /**
+   * Paid-search message match. Copy is chosen from a fixed map keyed by a
+   * trusted enum — arbitrary UTM text is never rendered, so a crafted ad URL
+   * cannot put words on the page.
+   */
+  const HERO_MATCH_COPY = {
+    cancelled:
+      "Interview cancelled? Build a monitoring plan around what actually changed.",
+    rescheduled:
+      "Interview moved? Check what now needs watching before the new date.",
+    no_date:
+      "Still waiting for a replacement date? Organize what to watch next.",
+    nvc_delay:
+      "Waiting on NVC scheduling? Build a clear monitoring plan meanwhile.",
+  };
+
+  function applyHeroMatch() {
+    const variant = heroVariant();
+    const copy = variant ? HERO_MATCH_COPY[variant] : null;
+    const slot = $("heroMatch");
+    if (!slot || !copy) return;
+    slot.textContent = copy;
+    slot.hidden = false;
+  }
+
   function updateScrollState() {
     $("siteHeader").classList.toggle("scrolled", window.scrollY > 24);
-    if (mobileCta)
-      mobileCta.classList.toggle(
-        "hidden",
-        window.scrollY > 500 || state.started,
-      );
   }
 
   window.addEventListener("scroll", updateScrollState, { passive: true });
+  applyHeroMatch();
   renderStep();
   updateScrollState();
   track("page_view");

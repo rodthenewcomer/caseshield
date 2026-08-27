@@ -131,3 +131,78 @@ test("rejects a cross-site caller that omits Origin", async () => {
   assert.equal(response.statusCode, 403);
   assert.equal(response.payload.error, "origin_not_allowed");
 });
+
+test("accepts and sanitizes campaign attribution", async () => {
+  const { result, messages } = await withSilentLog(() =>
+    invoke({
+      body: {
+        name: "page_view",
+        session_id: "valid-session-id",
+        utm_source: "google",
+        utm_medium: "cpc",
+        utm_campaign: "interview_disruption",
+        utm_content: "cancelled",
+        utm_term: "immigrant visa interview cancelled",
+        referrer_host: "www.google.com",
+      },
+    }),
+  );
+  assert.equal(result.statusCode, 200);
+  const event = JSON.parse(messages[0].replace("CASESHIELD_EVENT ", ""));
+  assert.equal(event.utm_source, "google");
+  assert.equal(event.utm_campaign, "interview_disruption");
+  assert.equal(event.referrer_host, "google.com", "www stripped");
+});
+
+test("drops attribution fields that are not on the allowlist", async () => {
+  const { messages } = await withSilentLog(() =>
+    invoke({
+      body: {
+        name: "page_view",
+        session_id: "valid-session-id",
+        utm_source: "google",
+        gclid: "Cj0KCQjw_ABCDEF",
+        referrer: "https://www.google.com/search?q=private+terms",
+        email: "someone@example.com",
+        ip: "203.0.113.9",
+        user_id: "u-123",
+      },
+    }),
+  );
+  const event = JSON.parse(messages[0].replace("CASESHIELD_EVENT ", ""));
+  assert.equal(event.utm_source, "google");
+  for (const forbidden of ["gclid", "referrer", "email", "ip", "user_id"]) {
+    assert.ok(!(forbidden in event), `${forbidden} must be dropped`);
+  }
+  assert.ok(!messages[0].includes("private+terms"));
+  assert.ok(!messages[0].includes("someone@example.com"));
+});
+
+test("redacts a probable case number smuggled through a campaign URL", async () => {
+  // A crafted ad URL is a real vector, not only the embassy input.
+  const { messages } = await withSilentLog(() =>
+    invoke({
+      body: {
+        name: "page_view",
+        session_id: "valid-session-id",
+        utm_term: "case ABJ2026123456 status",
+      },
+    }),
+  );
+  assert.match(messages[0], /\[redacted\]/);
+  assert.doesNotMatch(messages[0], /ABJ2026123456/);
+});
+
+test("caps attribution field length", async () => {
+  const { messages } = await withSilentLog(() =>
+    invoke({
+      body: {
+        name: "page_view",
+        session_id: "valid-session-id",
+        utm_campaign: "x".repeat(300),
+      },
+    }),
+  );
+  const event = JSON.parse(messages[0].replace("CASESHIELD_EVENT ", ""));
+  assert.ok(event.utm_campaign.length <= 60, "attribution length is capped");
+});

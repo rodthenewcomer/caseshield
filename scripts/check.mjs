@@ -8,7 +8,12 @@ const requiredFiles = [
   "intelligence.js",
   "api/event.js",
   "api/validation.js",
+  "acquisition.js",
   "lib/store.mjs",
+  "lib/events.mjs",
+  "lib/funnel.mjs",
+  "lib/redis.mjs",
+  "lib/attribution.mjs",
   "validation.html",
   "validation.js",
   "robots.txt",
@@ -128,6 +133,43 @@ assert.doesNotMatch(
   csp,
   /unsafe-inline|unsafe-eval/,
   "CSP must not enable unsafe script or style execution.",
+);
+
+// Optional actions must never sit inside the mandatory funnel chain: that is
+// what makes a stage conversion divide by the wrong denominator.
+assert.doesNotMatch(
+  contents["lib/events.mjs"],
+  /CORE_FUNNEL = \[[^\]]*alert_intent/s,
+  "alert_intent is optional and must stay out of the core funnel.",
+);
+assert.match(
+  contents["lib/funnel.mjs"],
+  /SINTERCARD/,
+  "Qualified WTP must use an exact set intersection, never raw counts.",
+);
+
+// Acquisition data must stay campaign-only.
+// Reading document.referrer is required to derive the host; storing the raw
+// URL or a click id is not.
+assert.match(
+  contents["acquisition.js"],
+  /new URL\(referrer\)\.hostname/,
+  "The referrer must be reduced to a hostname.",
+);
+assert.doesNotMatch(
+  contents["acquisition.js"],
+  /referrer_url|gclid|fbclid|msclkid/i,
+  "Full referrer URLs and click identifiers must never be captured.",
+);
+assert.doesNotMatch(
+  contents["acquisition.js"],
+  /\.innerHTML\b|insertAdjacentHTML|document\.write|\beval\s*\(/,
+  "Avoid unsafe DOM and code-execution sinks.",
+);
+assert.match(
+  contents["acquisition.js"],
+  /SAFE_CONTENT_VARIANTS/,
+  "Hero copy must come from a trusted enum, not raw UTM text.",
 );
 
 console.log(`CaseShield source checks passed (${requiredFiles.length} files).`);

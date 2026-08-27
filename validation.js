@@ -6,7 +6,6 @@
  */
 
 const STORAGE_KEY = "caseshield_validation_token";
-const SEGMENT_FIELDS = ["visa", "timing", "need", "embassy"];
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,7 +17,7 @@ function element(tag, className, text) {
 }
 
 function label(name) {
-  const words = name.replace(/_/g, " ");
+  const words = String(name).replace(/_/g, " ");
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
@@ -26,34 +25,53 @@ function pct(value) {
   return value === null || value === undefined ? "—" : `${value}%`;
 }
 
-function setStatus(message) {
-  const panel = $("status");
-  $("statusText").textContent = message;
-  panel.hidden = !message;
+/** "none" is the stored placeholder for an absent campaign dimension. */
+function dim(value) {
+  return !value || value === "none" ? "—" : value;
 }
 
-function card(title, value, note, isKey) {
-  const node = element("div", isKey ? "card key" : "card");
+function setStatus(message) {
+  $("statusText").textContent = message;
+  $("status").hidden = !message;
+}
+
+function card(title, value, note, variant) {
+  const node = element("div", variant ? `card ${variant}` : "card");
   node.append(element("span", null, title), element("strong", null, value));
   if (note) node.append(element("small", null, note));
   return node;
 }
 
-function renderHeadline(data) {
-  const target = $("headline");
-  target.replaceChildren();
+function row(cells) {
+  const tr = document.createElement("tr");
+  for (const cell of cells) {
+    tr.append(
+      element("td", cell.className, cell.text),
+    );
+  }
+  return tr;
+}
 
+function renderHeadline(data) {
   const h = data.headline;
-  target.append(
-    card("Sessions", data.sessions, "Unique anonymous visitors"),
-    card("Completions", h.completions, "Finished the 5-step check"),
-    card("Alert intent", h.alert_intents, "Asked to be monitored"),
+  $("wtpDefinition").textContent =
+    "Sessions that completed a case check AND signalled $29 intent, divided by sessions that completed a case check.";
+
+  $("headline").replaceChildren(
     card(
-      "Completion → $29 intent",
-      pct(h.completion_to_intent_pct),
-      "The kill-or-continue signal",
-      true,
+      "Qualified WTP",
+      pct(h.qualified_wtp_pct),
+      "Completers who want to pay",
+      "key",
     ),
+    card("Completions", h.completions, "Finished the 5-step check"),
+    card("Qualified intents", h.qualified_intents, "Completed, then clicked $29"),
+    card(
+      "Unqualified intents",
+      h.unqualified_intents,
+      "Clicked $29 without completing — real interest, excluded from the KPI",
+    ),
+    card("Sessions", data.sessions, "Unique anonymous visitors"),
   );
 }
 
@@ -72,66 +90,106 @@ function worstDropIndex(steps) {
   return worstIndex;
 }
 
-function renderTable(steps) {
-  const body = $("rows");
+function renderCore(steps) {
+  const body = $("coreRows");
   body.replaceChildren();
   const drop = worstDropIndex(steps);
 
   steps.forEach((step, index) => {
-    const row = element("tr", index === drop ? "drop" : null);
-    const name = element("td", null, label(step.name));
-    if (index === drop) name.textContent += "  ← biggest drop";
-    row.append(
-      name,
-      element(
-        "td",
-        step.unique_sessions ? "num" : "num zero",
-        step.unique_sessions,
-      ),
-      element("td", "num", step.total_events),
-      element("td", "num", pct(step.reach_pct)),
-      element("td", "num", pct(step.step_pct)),
-    );
-    body.append(row);
+    const name =
+      index === drop ? `${label(step.name)}  ← biggest drop` : label(step.name);
+    const tr = row([
+      { text: name },
+      {
+        text: step.unique_sessions,
+        className: step.unique_sessions ? "num" : "num zero",
+      },
+      { text: step.total_events, className: "num" },
+      { text: pct(step.reach_pct), className: "num" },
+      { text: pct(step.step_pct), className: "num" },
+    ]);
+    if (index === drop) tr.className = "drop";
+    body.append(tr);
   });
 }
 
-function renderSegments(recent) {
-  const target = $("segments");
-  target.replaceChildren();
+function renderActions(actions) {
+  const body = $("actionRows");
+  body.replaceChildren();
 
-  if (!recent.length) {
-    target.append(
-      card("No sampled answers yet", "—", "Recent events appear here"),
+  for (const [name, stats] of Object.entries(actions)) {
+    body.append(
+      row([
+        { text: label(name) },
+        {
+          text: stats.sessions,
+          className: stats.sessions ? "num" : "num zero",
+        },
+        { text: pct(stats.pct), className: "num" },
+        { text: stats.all_sessions, className: "num" },
+      ]),
     );
+  }
+}
+
+function renderCampaigns(campaigns) {
+  const body = $("campaignRows");
+  body.replaceChildren();
+
+  if (!campaigns.length) {
+    const tr = document.createElement("tr");
+    const td = element("td", "zero", "No sessions recorded yet.");
+    td.colSpan = 11;
+    tr.append(td);
+    body.append(tr);
     return;
   }
 
-  for (const field of SEGMENT_FIELDS) {
-    const counts = new Map();
-    for (const event of recent) {
-      const value = event?.[field];
-      if (!value || value === "[redacted]") continue;
-      counts.set(value, (counts.get(value) || 0) + 1);
-    }
-    if (!counts.size) continue;
+  for (const campaign of campaigns) {
+    const tr = row([
+      { text: campaign.unattributed ? "direct / unattributed" : dim(campaign.utm_source) },
+      { text: dim(campaign.utm_medium) },
+      { text: dim(campaign.utm_campaign) },
+      { text: dim(campaign.utm_content) },
+      { text: dim(campaign.utm_term) },
+      { text: campaign.sessions, className: "num" },
+      { text: campaign.case_starts, className: "num" },
+      { text: campaign.completions, className: "num" },
+      { text: pct(campaign.completion_pct), className: "num" },
+      { text: campaign.qualified_intents, className: "num" },
+      { text: pct(campaign.qualified_wtp_pct), className: "num" },
+    ]);
+    if (campaign.unattributed) tr.className = "zero";
+    body.append(tr);
+  }
+}
 
-    const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-    const [topValue, topCount] = ranked[0];
-    const others = ranked
-      .slice(1, 3)
-      .map(([value, count]) => `${value} (${count})`)
-      .join(", ");
-    target.append(
-      card(field, `${topValue} · ${topCount}`, others || "Only value seen"),
-    );
+function renderAnswers(answers) {
+  const target = $("answers");
+  target.replaceChildren();
+
+  const fields = Object.keys(answers).filter(
+    (field) => (answers[field] || []).length,
+  );
+  if (!fields.length) {
+    target.append(element("p", "sub", "No assessment answers recorded yet."));
+    return;
+  }
+
+  for (const field of fields) {
+    target.append(element("h3", "h3", label(field)));
+    const cards = element("div", "cards");
+    for (const entry of answers[field].slice(0, 6)) {
+      cards.append(card(entry.value, entry.sessions, "unique sessions"));
+    }
+    target.append(cards);
   }
 }
 
 function render(data) {
   if (!data.configured) {
     setStatus(
-      "Connected, but no event store is configured yet. Set KV_REST_API_URL and KV_REST_API_TOKEN on the project, then redeploy.",
+      "Connected, but no event store is configured. Set KV_REST_API_URL and KV_REST_API_TOKEN on the project, then redeploy.",
     );
   } else if (!data.sessions) {
     setStatus("Store is live and empty — no sessions recorded yet.");
@@ -139,9 +197,15 @@ function render(data) {
     setStatus("");
   }
 
+  const sample = $("sample");
+  sample.textContent = data.sample ? data.sample.note : "";
+  sample.className = `sample ${data.sample ? data.sample.label : ""}`;
+
   renderHeadline(data);
-  renderTable(data.steps);
-  renderSegments(data.recent || []);
+  renderCore(data.core || []);
+  renderActions(data.actions || {});
+  renderCampaigns(data.campaigns || []);
+  renderAnswers(data.answers || {});
   $("results").hidden = false;
 }
 

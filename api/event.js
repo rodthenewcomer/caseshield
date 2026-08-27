@@ -1,33 +1,21 @@
 import { checkRateLimit, recordEvent } from "../lib/store.mjs";
+import { ALLOWED_EVENTS, ALLOWED_FIELDS } from "../lib/events.mjs";
+import { referrerHost } from "../lib/attribution.mjs";
 
-const ALLOWED_EVENTS = new Set([
-  "page_view",
-  "hero_cta_click",
-  "case_check_started",
-  "case_step_1",
-  "case_step_2",
-  "case_step_3",
-  "case_step_4",
-  "case_step_5",
-  "case_check_completed",
-  "alert_intent",
-  "pricing_view",
-  "purchase_intent_29",
+const MAX_BODY_BYTES = 4_096;
+const MAX_FIELD_LENGTH = 90;
+const MAX_ATTRIBUTION_LENGTH = 60;
+
+/** Fields that could carry a case number if a URL or input is crafted. */
+const DIGIT_SENSITIVE = new Set([
+  "embassy",
+  "answer",
+  "utm_term",
+  "utm_content",
+  "utm_campaign",
 ]);
 
-const ALLOWED_FIELDS = [
-  "source",
-  "step_id",
-  "answer",
-  "event",
-  "visa",
-  "embassy",
-  "timing",
-  "need",
-];
-const MAX_BODY_BYTES = 4_096;
-
-function clean(value, max = 90) {
+function clean(value, max = MAX_FIELD_LENGTH) {
   return String(value ?? "")
     .replace(/[<>\u0000-\u001f\u007f]/g, " ")
     .replace(/\s+/g, " ")
@@ -81,6 +69,46 @@ function respond(res, status, payload) {
   return res.status(status).json(payload);
 }
 
+/**
+ * Build the stored event from an allowlist. Unknown fields are dropped rather
+ * than passed through, and anything resembling a case identifier is redacted
+ * before it can reach the log or the store.
+ */
+function buildEvent(body) {
+  const event = {
+    name: body.name,
+    ts: new Date().toISOString(),
+    session_id: cleanSessionId(body.session_id),
+  };
+
+  for (const key of ALLOWED_FIELDS) {
+    if (body[key] === undefined) continue;
+
+    if (key === "referrer_host") {
+      // Host only — a full referrer URL can carry the visitor's search terms.
+      const raw = clean(body[key], 80);
+      const host = referrerHost(raw.includes("://") ? raw : `https://${raw}`);
+      if (host) event[key] = host;
+      continue;
+    }
+
+    const isAttribution = key.startsWith("utm_");
+    const value = clean(
+      body[key],
+      isAttribution ? MAX_ATTRIBUTION_LENGTH : MAX_FIELD_LENGTH,
+    );
+    if (!value) continue;
+
+    const looksLikeCaseNumber =
+      DIGIT_SENSITIVE.has(key) &&
+      /\d{5,}/.test(value) &&
+      (key !== "answer" || body.step_id === "embassy");
+    event[key] = looksLikeCaseNumber ? "[redacted]" : value;
+  }
+
+  return event;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -113,21 +141,7 @@ export default async function handler(req, res) {
     return respond(res, 400, { ok: false, error: "invalid_event" });
   }
 
-  const event = {
-    name: body.name,
-    ts: new Date().toISOString(),
-    session_id: cleanSessionId(body.session_id),
-  };
-
-  // Keep the validation event schema intentionally narrow and non-sensitive.
-  for (const key of ALLOWED_FIELDS) {
-    if (body[key] === undefined) continue;
-    const value = clean(body[key]);
-    const couldBeCaseNumber =
-      (key === "embassy" || (key === "answer" && body.step_id === "embassy")) &&
-      /\d{5,}/.test(value);
-    event[key] = couldBeCaseNumber ? "[redacted]" : value;
-  }
+  const event = buildEvent(body);
 
   // Cheap validation runs first so junk never costs a store round-trip.
   const clientId = String(req.headers?.["x-forwarded-for"] || "")

@@ -212,3 +212,40 @@ input:focus-visible,
     transition: none !important;
   }
 }
+
+.h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  margin: 22px 0 0;
+}
+
+.sample {
+  margin: 22px 0 0;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 650;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+}
+
+.sample.directional {
+  border-color: #fedf89;
+  background: #fffaeb;
+  color: var(--warn);
+}
+
+.sample.early {
+  border-color: #b2ddff;
+  background: #eff8ff;
+  color: #026aa2;
+}
+
+.sample.decision {
+  border-color: #abefc6;
+  background: #ecfdf3;
+  color: var(--good);
+}
