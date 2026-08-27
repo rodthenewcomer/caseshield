@@ -1,3 +1,5 @@
+import { checkRateLimit, recordEvent } from "../lib/store.mjs";
+
 const ALLOWED_EVENTS = new Set([
   "page_view",
   "hero_cta_click",
@@ -39,7 +41,14 @@ function cleanSessionId(value) {
 }
 
 function isSameOrigin(req) {
+  // Browsers always send Sec-Fetch-Site; a cross-site caller is never valid
+  // here, even when it omits Origin.
+  if (String(req.headers?.["sec-fetch-site"] || "") === "cross-site") {
+    return false;
+  }
   const origin = req.headers?.origin;
+  // A missing Origin (curl, server-side probes) stays allowed: this endpoint
+  // only appends to an analytics log and mutates no user state.
   if (!origin) return true;
   try {
     const parsed = new URL(origin);
@@ -72,7 +81,7 @@ function respond(res, status, payload) {
   return res.status(status).json(payload);
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return respond(res, 405, { ok: false, error: "method_not_allowed" });
@@ -120,6 +129,21 @@ export default function handler(req, res) {
     event[key] = couldBeCaseNumber ? "[redacted]" : value;
   }
 
+  // Cheap validation runs first so junk never costs a store round-trip.
+  const clientId = String(req.headers?.["x-forwarded-for"] || "")
+    .split(",")[0]
+    .trim();
+  const rate = await checkRateLimit(clientId);
+  if (!rate.allowed) {
+    res.setHeader("Retry-After", "60");
+    return respond(res, 429, { ok: false, error: "rate_limited" });
+  }
+
+  // Structured log stays as a durable-store-independent audit trail.
   console.log("CASESHIELD_EVENT", JSON.stringify(event));
-  return respond(res, 200, { ok: true });
+
+  // A store outage must never fail the visitor's request.
+  const persisted = await recordEvent(event);
+
+  return respond(res, 200, { ok: true, stored: persisted.stored });
 }

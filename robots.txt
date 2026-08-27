@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /validation
+Disallow: /validation.html
+Disallow: /api/
+
 Sitemap: https://caseshield-validation.vercel.app/sitemap.xml

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>CaseShield — Validation funnel</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/validation.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="head">
+        <p class="kicker">Internal · not public</p>
+        <h1>Validation funnel</h1>
+        <p class="sub">
+          Unique sessions per stage. A visitor who reloads five times counts
+          once, so these numbers read as people rather than hits.
+        </p>
+      </header>
+
+      <section class="gate" id="gate">
+        <label class="field" for="token">Access token</label>
+        <div class="row">
+          <input
+            id="token"
+            type="password"
+            autocomplete="current-password"
+            placeholder="VALIDATION_TOKEN"
+          />
+          <button id="load" type="button" class="btn">Load</button>
+        </div>
+        <p class="note" id="gateNote">
+          Held in this tab only (sessionStorage). Never sent anywhere but this
+          site's own API.
+        </p>
+      </section>
+
+      <section class="panel" id="status" hidden>
+        <p id="statusText"></p>
+      </section>
+
+      <section id="results" hidden>
+        <div class="cards" id="headline"></div>
+        <h2 class="h2">Stage by stage</h2>
+        <div class="tableWrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Stage</th>
+                <th scope="col" class="num">Unique</th>
+                <th scope="col" class="num">Total</th>
+                <th scope="col" class="num">Reach</th>
+                <th scope="col" class="num">From previous</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <h2 class="h2">Recent answer mix</h2>
+        <p class="sub">
+          Distribution across the last stored events — use it to see which
+          segments actually complete, not just how many.
+        </p>
+        <div class="cards" id="segments"></div>
+      </section>
+    </main>
+    <script type="module" src="/validation.js"></script>
+  </body>
+</html>

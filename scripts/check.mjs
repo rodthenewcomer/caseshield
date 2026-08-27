@@ -7,6 +7,11 @@ const requiredFiles = [
   "app.js",
   "intelligence.js",
   "api/event.js",
+  "api/validation.js",
+  "lib/store.mjs",
+  "validation.html",
+  "validation.js",
+  "robots.txt",
   "SECURITY.md",
   "vercel.json",
 ];
@@ -59,6 +64,52 @@ assert.doesNotMatch(
   contents["app.js"],
   /\.style\./,
   "Runtime inline styles would be blocked by the strict CSP.",
+);
+
+// The internal dashboard must meet the same bar as the public site.
+assert.doesNotMatch(
+  contents["validation.js"],
+  /\.innerHTML\b|insertAdjacentHTML|document\.write|\beval\s*\(|\.style\./,
+  "The dashboard must avoid unsafe DOM sinks and runtime inline styles.",
+);
+assert.doesNotMatch(
+  contents["validation.html"],
+  /\sstyle=/i,
+  "Inline styles would weaken the strict CSP.",
+);
+assert.match(
+  contents["validation.html"],
+  /name="robots" content="noindex, nofollow"/,
+  "Internal business metrics must never be indexed.",
+);
+assert.match(
+  contents["robots.txt"],
+  /Disallow: \/validation/,
+  "robots.txt must keep crawlers away from the internal dashboard.",
+);
+
+// Business metrics must fail closed rather than leak.
+assert.match(
+  contents["api/validation.js"],
+  /timingSafeEqual/,
+  "Dashboard auth must use a constant-time comparison.",
+);
+assert.match(
+  contents["api/validation.js"],
+  /dashboard_not_configured/,
+  "The dashboard must fail closed when no token is configured.",
+);
+
+// Analytics must never take the product down with it.
+assert.match(
+  contents["lib/store.mjs"],
+  /not_configured/,
+  "The store must degrade gracefully when unconfigured.",
+);
+assert.doesNotMatch(
+  contents["lib/store.mjs"],
+  /KV_REST_API_TOKEN\s*=\s*["']/,
+  "Store credentials must come from the environment, never source.",
 );
 
 const vercelConfig = JSON.parse(contents["vercel.json"]);
