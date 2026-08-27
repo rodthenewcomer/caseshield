@@ -107,7 +107,8 @@ try {
 
   // ---- Desktop: complete the five-step assessment -------------------------
   const page = await newPage({ width: 1440, height: 900 });
-  await page.goto(base, { waitUntil: "networkidle" });
+  await page.goto(base, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#heroCta", { state: "visible" });
   check((await page.title()).length > 0, "page loads with a title");
 
   await page.click("#heroCta");
@@ -155,7 +156,8 @@ try {
 
   // ---- Mobile: iPhone width must not scroll sideways ----------------------
   const mobile = await newPage({ width: 390, height: 844 });
-  await mobile.goto(base, { waitUntil: "networkidle" });
+  await mobile.goto(base, { waitUntil: "domcontentloaded" });
+  await mobile.waitForSelector("#heroCta", { state: "visible" });
   const overflow = await mobile.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth,
   );
