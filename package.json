@@ -1,1 +1,15 @@
-{"name":"caseshield-validation","private":true,"version":"0.1.0"}
+{
+  "name": "caseshield-validation",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Acquisition-first validation site for U.S. immigrant visa disruption intelligence.",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node --test",
+    "verify": "npm run check && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

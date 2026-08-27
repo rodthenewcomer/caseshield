@@ -1,305 +1,827 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#F6F7FB" />
-  <meta name="description" content="Track immigrant visa interview disruptions, embassy rescheduling signals and time-sensitive case risks in one clear dashboard." />
-  <meta property="og:title" content="CaseShield — U.S. Visa Interview Disruption Tracker" />
-  <meta property="og:description" content="Track immigrant visa interview disruptions, embassy rescheduling signals and time-sensitive case risks in one clear dashboard." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://caseshield-validation.vercel.app/" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://caseshield-validation.vercel.app/" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/styles.css" />
-  <title>CaseShield — U.S. Visa Interview Disruption Tracker</title>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F6F7FB" />
+    <meta
+      name="description"
+      content="Understand U.S. immigrant visa interview disruptions with clearly labeled official sources, community context and a private case-monitoring plan."
+    />
+    <meta
+      property="og:title"
+      content="CaseShield — Immigration disruption intelligence"
+    />
+    <meta
+      property="og:description"
+      content="A private-beta intelligence layer for U.S. immigrant visa interview disruptions, source confidence and time-sensitive case risks."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://caseshield-validation.vercel.app/"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://caseshield-validation.vercel.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>CaseShield — Immigration disruption intelligence</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" id="siteHeader">
-    <div class="shell nav-shell">
-      <a class="brand" href="#top" aria-label="CaseShield home">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 40 40" role="img"><path d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z" fill="url(#g)"/><path d="M13.6 21.1c2.3-1.2 4.4-1.8 6.4-1.8s4.1.6 6.4 1.8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="15.1" r="2.1" fill="#fff"/><defs><linearGradient id="g" x1="7.8" y1="4" x2="33.5" y2="34.5"><stop stop-color="#5B5CF6"/><stop offset=".5" stop-color="#7778FF"/><stop offset="1" stop-color="#36BFFA"/></linearGradient></defs></svg>
-        </span>
-        <span>CaseShield</span>
-      </a>
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#how">How it works</a>
-        <a href="#signals">Live Signals</a>
-        <a href="#privacy">Privacy</a>
-      </nav>
-      <button class="btn btn-sm btn-primary" data-scroll-check>Check my case</button>
-    </div>
-  </header>
+    <header class="site-header" id="siteHeader">
+      <div class="shell nav-shell">
+        <a class="brand" href="#top" aria-label="CaseShield home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" role="img">
+              <path
+                d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z"
+                fill="url(#g)"
+              />
+              <path
+                d="M13.6 21.1c2.3-1.2 4.4-1.8 6.4-1.8s4.1.6 6.4 1.8"
+                fill="none"
+                stroke="#fff"
+                stroke-width="2.4"
+                stroke-linecap="round"
+              />
+              <circle cx="20" cy="15.1" r="2.1" fill="#fff" />
+              <defs>
+                <linearGradient id="g" x1="7.8" y1="4" x2="33.5" y2="34.5">
+                  <stop stop-color="#5B5CF6" />
+                  <stop offset=".5" stop-color="#7778FF" />
+                  <stop offset="1" stop-color="#36BFFA" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span>CaseShield</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#how">How it works</a>
+          <a href="#signals">Signal preview</a>
+          <a href="#evidence">Evidence standard</a>
+          <a href="#privacy">Privacy</a>
+        </nav>
+        <button class="btn btn-sm btn-primary" type="button" data-scroll-check>
+          Build my plan
+        </button>
+      </div>
+    </header>
 
-  <main id="main">
-    <section class="hero section" id="top">
-      <div class="hero-orb hero-orb-one" aria-hidden="true"></div>
-      <div class="hero-orb hero-orb-two" aria-hidden="true"></div>
-      <div class="shell hero-grid">
-        <div class="hero-copy reveal is-visible">
-          <div class="eyebrow"><span class="live-dot"></span> LIVE · U.S. IMMIGRANT VISA MONITORING</div>
-          <h1>Your interview changed.<br><span>Your next move shouldn’t be a guess.</span></h1>
-          <p class="hero-sub">CaseShield turns embassy disruptions, rescheduling reports and time-sensitive case risks into one clear view of what matters to your immigration journey.</p>
-          <div class="hero-actions">
-            <button class="btn btn-primary btn-lg" id="heroCta">Check my case — free <span aria-hidden="true">→</span></button>
-            <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
+    <main id="main">
+      <section class="hero section" id="top">
+        <div class="hero-orb hero-orb-one" aria-hidden="true"></div>
+        <div class="hero-orb hero-orb-two" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy reveal is-visible">
+            <div class="eyebrow">
+              <span class="beta-dot"></span> PRIVATE BETA · U.S. IMMIGRANT VISA
+              INTELLIGENCE
+            </div>
+            <h1>
+              Your interview changed.<br /><span
+                >Your next move shouldn’t be a guess.</span
+              >
+            </h1>
+            <p class="hero-sub">
+              CaseShield organizes official updates, embassy-specific reports
+              and your timeline into a clear plan of what to verify, what to
+              watch and when to seek qualified help.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-lg" type="button" id="heroCta">
+                Build my monitoring plan — free
+                <span aria-hidden="true">→</span>
+              </button>
+              <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
+            </div>
+            <div class="trust-row" aria-label="Trust information">
+              <span><i class="mini-check">✓</i> No case number</span>
+              <span><i class="mini-check">✓</i> Every signal labeled</span>
+              <span
+                ><i class="mini-check">✓</i> Independent — not legal
+                advice</span
+              >
+            </div>
           </div>
-          <div class="trust-row" aria-label="Trust information">
-            <span><i class="mini-check">✓</i> Independent</span>
-            <span><i class="mini-check">✓</i> Privacy-first</span>
-            <span><i class="mini-check">✓</i> Not affiliated with USCIS or DOS</span>
+
+          <div
+            class="hero-visual reveal is-visible delay-1"
+            aria-label="Illustrative CaseShield dashboard preview"
+          >
+            <div class="preview-glow" aria-hidden="true"></div>
+            <div class="intel-card float-card">
+              <div class="intel-topline">
+                <div>
+                  <div class="intel-brand">
+                    CASESHIELD <span>INTELLIGENCE</span>
+                  </div>
+                  <div class="visa-chip">CR1 / IR1 · London scenario</div>
+                </div>
+                <span class="demo-chip">Illustrative preview</span>
+              </div>
+              <div class="case-status-block">
+                <div class="case-status-label">Scenario status</div>
+                <div class="case-status-row">
+                  <div>
+                    <h2>Interview change reported</h2>
+                    <div class="monitoring">
+                      <span class="pulse-dot"></span> Monitoring plan ready
+                    </div>
+                  </div>
+                  <div class="shield-score">
+                    <span>3</span><small>sources</small>
+                  </div>
+                </div>
+              </div>
+              <div class="intel-grid">
+                <div class="intel-metric">
+                  <span>Official confirmation</span><strong>Pending</strong>
+                </div>
+                <div class="intel-metric">
+                  <span>Embassy notice</span><strong>Check source</strong>
+                </div>
+                <div class="intel-metric">
+                  <span>Community context</span><strong>12</strong
+                  ><em>demo reports</em>
+                </div>
+                <div class="intel-metric">
+                  <span>Medical validity</span
+                  ><strong class="good">Verify dates</strong>
+                </div>
+              </div>
+              <div class="signal-chart" aria-hidden="true">
+                <div class="chart-head">
+                  <span>Illustrative signal activity</span
+                  ><span>7-day scenario</span>
+                </div>
+                <svg viewBox="0 0 360 90" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="0"
+                        stop-color="#5B5CF6"
+                        stop-opacity=".22"
+                      />
+                      <stop offset="1" stop-color="#5B5CF6" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0 74 C35 70 55 63 80 66 C110 70 129 50 154 55 C182 61 201 31 230 38 C260 45 286 17 315 25 C335 31 347 16 360 20 L360 90 L0 90Z"
+                    fill="url(#area)"
+                  />
+                  <path
+                    d="M0 74 C35 70 55 63 80 66 C110 70 129 50 154 55 C182 61 201 31 230 38 C260 45 286 17 315 25 C335 31 347 16 360 20"
+                    fill="none"
+                    stroke="#5B5CF6"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <div class="next-check">
+                <span class="next-icon">↻</span>
+                <div>
+                  <small>Next verification step</small
+                  ><strong>Check the issuing post’s official notice</strong>
+                </div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="micro-card micro-card-a">
+              <span class="micro-icon success-icon">✓</span>
+              <div>
+                <small>Source label</small><strong>Official · verified</strong>
+              </div>
+            </div>
+            <div class="micro-card micro-card-b">
+              <span class="micro-icon warn-icon">!</span>
+              <div>
+                <small>Community report</small
+                ><strong>Context · unverified</strong>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="hero-visual reveal is-visible delay-1" aria-label="Illustrative CaseShield dashboard preview">
-          <div class="preview-glow" aria-hidden="true"></div>
-          <div class="intel-card float-card">
-            <div class="intel-topline">
+      <section class="activity-wrap" aria-label="Illustrative activity preview">
+        <div class="activity-label">Illustrative product scenario</div>
+        <div class="ticker-mask">
+          <div class="ticker-track">
+            <span><b>Official</b> · Embassy notices carry the most weight</span
+            ><span
+              ><b>Operational</b> · Appointment portals may reveal scheduling
+              changes</span
+            ><span
+              ><b>Community</b> · Reports provide context, not
+              confirmation</span
+            ><span
+              ><b>Personal</b> · Your document dates determine urgency</span
+            >
+            <span aria-hidden="true"
+              ><b>Official</b> · Embassy notices carry the most weight</span
+            ><span aria-hidden="true"
+              ><b>Operational</b> · Appointment portals may reveal scheduling
+              changes</span
+            ><span aria-hidden="true"
+              ><b>Community</b> · Reports provide context, not
+              confirmation</span
+            ><span aria-hidden="true"
+              ><b>Personal</b> · Your document dates determine urgency</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="section check-section" id="check">
+        <div class="shell narrow-shell">
+          <div class="section-kicker reveal">CASE CHECK</div>
+          <div class="section-head centered reveal">
+            <h2>Build a monitoring plan around your case.</h2>
+            <p>
+              Answer five non-sensitive questions. Your result changes with your
+              disruption, timing and priority.
+            </p>
+          </div>
+
+          <div class="assessment-shell reveal" id="assessmentShell">
+            <div class="assessment-top">
               <div>
-                <div class="intel-brand">CASESHIELD <span>INTELLIGENCE</span></div>
-                <div class="visa-chip">CR1 / IR1 · London</div>
+                <span class="step-label" id="stepLabel">Step 1 of 5</span>
+                <span class="privacy-inline"
+                  ><span class="lock-icon">◇</span> No case number
+                  required</span
+                >
               </div>
-              <span class="demo-chip">Demo preview</span>
+              <button
+                class="icon-button"
+                id="resetAssessment"
+                aria-label="Reset assessment"
+                title="Reset"
+              >
+                ↺
+              </button>
             </div>
-            <div class="case-status-block">
-              <div class="case-status-label">Case status</div>
-              <div class="case-status-row">
-                <div>
-                  <h2>Interview disrupted</h2>
-                  <div class="monitoring"><span class="pulse-dot"></span> Active monitoring</div>
-                </div>
-                <div class="shield-score"><span>82</span><small>signal</small></div>
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="assessment-stage" id="assessmentStage"></div>
+            <noscript
+              ><p class="noscript-note">
+                JavaScript is required to build the interactive monitoring plan.
+                No case number or identity document is requested.
+              </p></noscript
+            >
+          </div>
+
+          <div class="snapshot" id="snapshot" aria-live="polite" hidden>
+            <div class="snapshot-header">
+              <div>
+                <span class="snapshot-overline">YOUR CASESHIELD SNAPSHOT</span>
+                <h3 id="snapshotTitle" tabindex="-1">Your monitoring plan</h3>
+              </div>
+              <span class="status-pill warning-pill" id="snapshotStatus"
+                ><span></span> Monitoring plan</span
+              >
+            </div>
+            <div class="snapshot-context" id="snapshotContext"></div>
+            <div class="snapshot-grid">
+              <div class="snapshot-item">
+                <span>Primary thing to watch</span
+                ><strong id="snapshotWatch"
+                  >Embassy-specific scheduling activity</strong
+                >
+              </div>
+              <div class="snapshot-item">
+                <span>Official source to verify</span
+                ><strong id="snapshotSource"
+                  >The issuing post’s official instructions</strong
+                >
+              </div>
+              <div class="snapshot-item">
+                <span>Time-sensitive item</span
+                ><strong id="snapshotRisk"
+                  >Medical and document validity dates</strong
+                >
+              </div>
+              <div class="snapshot-item">
+                <span>Professional-help threshold</span
+                ><strong id="snapshotEscalation"
+                  >A case-specific legal issue or conflicting official
+                  instructions</strong
+                >
               </div>
             </div>
-            <div class="intel-grid">
-              <div class="intel-metric"><span>Original interview</span><strong>Aug 28</strong></div>
-              <div class="intel-metric"><span>Latest signal</span><strong>Aug 27</strong></div>
-              <div class="intel-metric"><span>New-date reports</span><strong>12</strong><em>illustrative</em></div>
-              <div class="intel-metric"><span>Medical expiry risk</span><strong class="good">Low</strong></div>
+            <div class="snapshot-action">
+              <p class="snapshot-disclaimer" id="snapshotNote">
+                Planning guidance only. Verify every action against current
+                official instructions.
+              </p>
+              <button
+                class="btn btn-primary btn-lg"
+                type="button"
+                id="alertIntent"
+              >
+                I want alerts for this plan <span aria-hidden="true">→</span>
+              </button>
+              <p>Validation click only — no email or payment is collected.</p>
+              <div class="inline-success" id="alertSuccess" hidden>
+                ✓ Interest recorded for this validation test. We are not
+                collecting your email yet.
+              </div>
             </div>
-            <div class="signal-chart" aria-hidden="true">
-              <div class="chart-head"><span>Embassy activity</span><span>7 days</span></div>
-              <svg viewBox="0 0 360 90" preserveAspectRatio="none">
-                <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B5CF6" stop-opacity=".22"/><stop offset="1" stop-color="#5B5CF6" stop-opacity="0"/></linearGradient></defs>
-                <path d="M0 74 C35 70 55 63 80 66 C110 70 129 50 154 55 C182 61 201 31 230 38 C260 45 286 17 315 25 C335 31 347 16 360 20 L360 90 L0 90Z" fill="url(#area)"/>
-                <path d="M0 74 C35 70 55 63 80 66 C110 70 129 50 154 55 C182 61 201 31 230 38 C260 45 286 17 315 25 C335 31 347 16 360 20" fill="none" stroke="#5B5CF6" stroke-width="2.5" stroke-linecap="round"/>
+          </div>
+        </div>
+      </section>
+
+      <section class="section network-section" id="signals">
+        <div class="shell split-heading">
+          <div class="reveal">
+            <div class="section-kicker">COMMUNITY INTELLIGENCE</div>
+            <h2>
+              One report is a clue.<br /><span
+                >Corroborated sources reveal the pattern.</span
+              >
+            </h2>
+          </div>
+          <p class="reveal">
+            CaseShield is designed to aggregate anonymous applicant signals so
+            individual families can see patterns that are almost impossible to
+            understand alone.
+          </p>
+        </div>
+
+        <div class="shell network-grid reveal">
+          <div class="network-dashboard">
+            <div class="dash-top">
+              <div>
+                <span class="demo-chip"
+                  >Product preview · illustrative scenario</span
+                >
+                <h3>Embassy Pulse</h3>
+              </div>
+              <span class="segmented">London scenario</span>
+            </div>
+            <div class="pulse-grid">
+              <div class="pulse-stat">
+                <span>Scenario cases</span><strong data-count="47">47</strong
+                ><small>Demo only</small>
+              </div>
+              <div class="pulse-stat">
+                <span>Example reports</span><strong data-count="11">11</strong
+                ><small>Unverified context</small>
+              </div>
+              <div class="pulse-stat">
+                <span>Median reschedule gap</span><strong>—</strong
+                ><small>Not enough data</small>
+              </div>
+              <div class="pulse-stat">
+                <span>Official status</span><strong>—</strong
+                ><small>Not provided in demo</small>
+              </div>
+            </div>
+            <div class="map-panel">
+              <div class="map-grid-lines"></div>
+              <div class="map-node node-london">
+                <span></span><b>London</b><small>11 demo signals</small>
+              </div>
+              <div class="map-node node-paris">
+                <span></span><b>Paris</b><small>4 demo signals</small>
+              </div>
+              <div class="map-node node-frankfurt">
+                <span></span><b>Frankfurt</b><small>7 demo signals</small>
+              </div>
+              <svg
+                class="map-links"
+                viewBox="0 0 600 240"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path d="M170 110 C245 75 300 95 362 74" />
+                <path d="M175 115 C245 158 335 148 425 168" />
               </svg>
             </div>
-            <div class="next-check"><span class="next-icon">↻</span><div><small>Next CaseShield check</small><strong>Monitoring embassy movement</strong></div><span class="chev">›</span></div>
           </div>
-          <div class="micro-card micro-card-a"><span class="micro-icon success-icon">✓</span><div><small>Community signal</small><strong>New date reported</strong></div></div>
-          <div class="micro-card micro-card-b"><span class="micro-icon warn-icon">!</span><div><small>Risk watch</small><strong>1 item to monitor</strong></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="activity-wrap" aria-label="Illustrative activity preview">
-      <div class="activity-label">Illustrative product preview</div>
-      <div class="ticker-mask">
-        <div class="ticker-track">
-          <span><b>London</b> · New reschedule reports</span><span><b>Mumbai</b> · Interview monitoring active</span><span><b>Ciudad Juárez</b> · New dates reported</span><span><b>Frankfurt</b> · Applicant reports updated</span><span><b>Abidjan</b> · Scheduling activity monitored</span>
-          <span aria-hidden="true"><b>London</b> · New reschedule reports</span><span aria-hidden="true"><b>Mumbai</b> · Interview monitoring active</span><span aria-hidden="true"><b>Ciudad Juárez</b> · New dates reported</span><span aria-hidden="true"><b>Frankfurt</b> · Applicant reports updated</span><span aria-hidden="true"><b>Abidjan</b> · Scheduling activity monitored</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section check-section" id="check">
-      <div class="shell narrow-shell">
-        <div class="section-kicker reveal">CASE CHECK</div>
-        <div class="section-head centered reveal">
-          <h2>Turn uncertainty into a clear next signal.</h2>
-          <p>Answer five non-sensitive questions. We’ll show what CaseShield would monitor for your situation.</p>
-        </div>
-
-        <div class="assessment-shell reveal" id="assessmentShell">
-          <div class="assessment-top">
-            <div>
-              <span class="step-label" id="stepLabel">Step 1 of 5</span>
-              <span class="privacy-inline"><span class="lock-icon">◇</span> No case number required</span>
+          <div class="signal-feed">
+            <div class="feed-head">
+              <span>Signal feed</span
+              ><span class="live-soft"><i></i> illustrative</span>
             </div>
-            <button class="icon-button" id="resetAssessment" aria-label="Reset assessment" title="Reset">↺</button>
-          </div>
-          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
-          <div class="assessment-stage" id="assessmentStage"></div>
-        </div>
-
-        <div class="snapshot" id="snapshot" aria-live="polite" hidden>
-          <div class="snapshot-header">
-            <div>
-              <span class="snapshot-overline">YOUR CASESHIELD SNAPSHOT</span>
-              <h3>Active disruption</h3>
+            <div class="feed-item">
+              <span class="feed-badge blue">LHR</span>
+              <div>
+                <strong>Community date report</strong>
+                <p>Context until corroborated</p>
+              </div>
+              <time>Demo</time>
             </div>
-            <span class="status-pill warning-pill"><span></span> Monitoring recommended</span>
-          </div>
-          <div class="snapshot-context" id="snapshotContext"></div>
-          <div class="snapshot-grid">
-            <div class="snapshot-item"><span>Primary thing to watch</span><strong>Embassy-specific rescheduling activity</strong></div>
-            <div class="snapshot-item"><span>Strongest signal</span><strong>Applicants with the same embassy + visa category</strong></div>
-            <div class="snapshot-item"><span>Time-sensitive risk</span><strong>Medical/document expiration <em>needs monitoring</em></strong></div>
-            <div class="snapshot-item"><span>Policy context</span><strong>Operational changes may affect interview timing</strong></div>
-          </div>
-          <div class="snapshot-action">
-            <button class="btn btn-primary btn-lg" id="alertIntent">Notify me when this changes <span aria-hidden="true">→</span></button>
-            <p>No spam. Only meaningful case alerts.</p>
-            <div class="inline-success" id="alertSuccess" hidden>✓ Interest recorded for this validation test. We are not collecting your email yet.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section network-section" id="signals">
-      <div class="shell split-heading">
-        <div class="reveal">
-          <div class="section-kicker">COMMUNITY INTELLIGENCE</div>
-          <h2>One applicant knows their case.<br><span>Thousands reveal the pattern.</span></h2>
-        </div>
-        <p class="reveal">CaseShield is designed to aggregate anonymous applicant signals so individual families can see patterns that are almost impossible to understand alone.</p>
-      </div>
-
-      <div class="shell network-grid reveal">
-        <div class="network-dashboard">
-          <div class="dash-top"><div><span class="demo-chip">Product preview · illustrative data</span><h3>Embassy Pulse</h3></div><button class="segmented">London <span>⌄</span></button></div>
-          <div class="pulse-grid">
-            <div class="pulse-stat"><span>Tracked cases</span><strong data-count="47">47</strong><small>CR1 / IR1</small></div>
-            <div class="pulse-stat"><span>New dates reported</span><strong data-count="11">11</strong><small>Illustrative</small></div>
-            <div class="pulse-stat"><span>Median reschedule gap</span><strong>—</strong><small>Not enough data</small></div>
-            <div class="pulse-stat"><span>Latest signal</span><strong>2h</strong><small>Illustrative</small></div>
-          </div>
-          <div class="map-panel">
-            <div class="map-grid-lines"></div>
-            <div class="map-node node-london"><span></span><b>London</b><small>11 signals</small></div>
-            <div class="map-node node-paris"><span></span><b>Paris</b><small>4 signals</small></div>
-            <div class="map-node node-frankfurt"><span></span><b>Frankfurt</b><small>7 signals</small></div>
-            <svg class="map-links" viewBox="0 0 600 240" preserveAspectRatio="none" aria-hidden="true"><path d="M170 110 C245 75 300 95 362 74"/><path d="M175 115 C245 158 335 148 425 168"/></svg>
+            <div class="feed-item">
+              <span class="feed-badge indigo">BOM</span>
+              <div>
+                <strong>Appointment portal change</strong>
+                <p>Operational source</p>
+              </div>
+              <time>Demo</time>
+            </div>
+            <div class="feed-item">
+              <span class="feed-badge amber">ABJ</span>
+              <div>
+                <strong>Embassy notice published</strong>
+                <p>Official source</p>
+              </div>
+              <time>Demo</time>
+            </div>
+            <div class="feed-note">
+              Preview only. No event above is presented as verified live data.
+            </div>
           </div>
         </div>
-        <div class="signal-feed">
-          <div class="feed-head"><span>Signal feed</span><span class="live-soft"><i></i> illustrative</span></div>
-          <div class="feed-item"><span class="feed-badge blue">LHR</span><div><strong>New appointment date reported</strong><p>CR1 / IR1 · London</p></div><time>2h</time></div>
-          <div class="feed-item"><span class="feed-badge indigo">BOM</span><div><strong>Interview monitoring active</strong><p>Family immigrant visa · Mumbai</p></div><time>4h</time></div>
-          <div class="feed-item"><span class="feed-badge amber">ABJ</span><div><strong>Scheduling activity watched</strong><p>CR1 / IR1 · Abidjan</p></div><time>6h</time></div>
-          <div class="feed-note">Preview only. No event above is presented as verified live data.</div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section intelligence-section" id="how">
-      <div class="shell">
-        <div class="section-head centered reveal">
-          <div class="section-kicker">HOW CASESHIELD THINKS</div>
-          <h2>Official facts + applicant signals + your timeline.</h2>
-          <p>No magic. No visa-approval predictions. Just a cleaner intelligence layer around a fragmented process.</p>
-        </div>
-        <div class="flow-diagram reveal">
-          <div class="flow-source">
-            <div class="flow-icon official">◎</div><div><strong>Official sources</strong><span>USCIS · NVC · Department of State · Embassy notices</span></div>
+      <section class="section evidence-section" id="evidence">
+        <div class="shell evidence-layout">
+          <div class="evidence-intro reveal">
+            <div class="section-kicker">EVIDENCE STANDARD</div>
+            <h2>A report is never presented as an official fact.</h2>
+            <p>
+              CaseShield’s product direction is built around source type,
+              corroboration and freshness — so a useful signal does not become a
+              misleading claim.
+            </p>
           </div>
-          <div class="flow-source">
-            <div class="flow-icon community">◌</div><div><strong>Anonymous applicant signals</strong><span>Cancelled · new date · visa category · embassy</span></div>
+          <div
+            class="source-ladder reveal"
+            aria-label="CaseShield source confidence hierarchy"
+          >
+            <article class="source-level source-official">
+              <span>01 · Highest weight</span>
+              <h3>Official notice</h3>
+              <p>
+                USCIS, NVC, Department of State, an embassy or an authorized
+                appointment system.
+              </p>
+              <strong>Label: Official · verified</strong>
+            </article>
+            <article class="source-level source-operational">
+              <span>02 · Direct context</span>
+              <h3>Operational change</h3>
+              <p>
+                A case portal, appointment page or written instruction that
+                affects the applicant’s next check.
+              </p>
+              <strong>Label: Direct · verify scope</strong>
+            </article>
+            <article class="source-level source-community">
+              <span>03 · Supporting context</span>
+              <h3>Community report</h3>
+              <p>
+                An anonymous report that can show a pattern but cannot confirm
+                another person’s case.
+              </p>
+              <strong>Label: Community · unverified</strong>
+            </article>
           </div>
-          <div class="flow-source">
-            <div class="flow-icon timeline">⌁</div><div><strong>Case timeline</strong><span>Interview timing · medical validity · document timing</span></div>
+        </div>
+      </section>
+
+      <section class="section intelligence-section" id="how">
+        <div class="shell">
+          <div class="section-head centered reveal">
+            <div class="section-kicker">HOW CASESHIELD THINKS</div>
+            <h2>Official facts + applicant signals + your timeline.</h2>
+            <p>
+              No magic. No visa-approval predictions. Just a cleaner
+              intelligence layer around a fragmented process.
+            </p>
           </div>
-          <div class="flow-arrow" aria-hidden="true">↓</div>
-          <div class="flow-core"><span class="brand-mark small-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z" fill="#fff"/><circle cx="20" cy="15.1" r="2.1" fill="#5B5CF6"/></svg></span><div><small>CASESHIELD INTELLIGENCE</small><strong>What changed · whether it matters · what to monitor</strong></div></div>
+          <div class="flow-diagram reveal">
+            <div class="flow-source">
+              <div class="flow-icon official">◎</div>
+              <div>
+                <strong>Official sources</strong
+                ><span
+                  >USCIS · NVC · Department of State · Embassy notices</span
+                >
+              </div>
+            </div>
+            <div class="flow-source">
+              <div class="flow-icon community">◌</div>
+              <div>
+                <strong>Anonymous applicant signals</strong
+                ><span>Cancelled · new date · visa category · embassy</span>
+              </div>
+            </div>
+            <div class="flow-source">
+              <div class="flow-icon timeline">⌁</div>
+              <div>
+                <strong>Case timeline</strong
+                ><span
+                  >Interview timing · medical validity · document timing</span
+                >
+              </div>
+            </div>
+            <div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-core">
+              <span class="brand-mark small-mark" aria-hidden="true"
+                ><svg viewBox="0 0 40 40">
+                  <path
+                    d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z"
+                    fill="#fff"
+                  />
+                  <circle cx="20" cy="15.1" r="2.1" fill="#5B5CF6" /></svg
+              ></span>
+              <div>
+                <small>CASESHIELD INTELLIGENCE</small
+                ><strong
+                  >What changed · whether it matters · what to monitor</strong
+                >
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section product-section">
-      <div class="shell">
-        <div class="split-heading compact">
-          <div class="reveal"><div class="section-kicker">PRODUCT PREVIEW</div><h2>A calm dashboard for a messy process.</h2></div>
-          <p class="reveal">These modules are illustrative. They show the product direction we’re validating — not a claim that the full service exists today.</p>
+      <section class="section product-section">
+        <div class="shell">
+          <div class="split-heading compact">
+            <div class="reveal">
+              <div class="section-kicker">PRODUCT PREVIEW</div>
+              <h2>A calm dashboard for a messy process.</h2>
+            </div>
+            <p class="reveal">
+              These modules are illustrative. They show the product direction
+              we’re validating — not a claim that the full service exists today.
+            </p>
+          </div>
+          <div class="product-grid reveal">
+            <article class="product-card pulse-card">
+              <div class="product-card-head">
+                <div>
+                  <span class="module-tag">01</span>
+                  <h3>Embassy Pulse</h3>
+                </div>
+                <span class="demo-chip">Demo</span>
+              </div>
+              <p>
+                See rescheduling activity and applicant signals for the embassy
+                that matters to you.
+              </p>
+              <div class="mini-chart">
+                <div class="mini-bars">
+                  <i class="bar-1"></i><i class="bar-2"></i><i class="bar-3"></i
+                  ><i class="bar-4"></i><i class="bar-5"></i
+                  ><i class="bar-6"></i><i class="bar-7"></i
+                  ><i class="bar-8"></i>
+                </div>
+                <div class="mini-chart-labels">
+                  <span>Mon</span><span>Today</span>
+                </div>
+              </div>
+            </article>
+            <article class="product-card timeline-card">
+              <div class="product-card-head">
+                <div>
+                  <span class="module-tag">02</span>
+                  <h3>Case Timeline</h3>
+                </div>
+                <span class="demo-chip">Demo</span>
+              </div>
+              <p>
+                One chronological view from DQ to interview disruption to the
+                next meaningful signal.
+              </p>
+              <div class="timeline-ui">
+                <div class="timeline-line"></div>
+                <div class="timeline-step done">
+                  <span>✓</span>
+                  <div><strong>DQ complete</strong><small>May 12</small></div>
+                </div>
+                <div class="timeline-step done">
+                  <span>✓</span>
+                  <div>
+                    <strong>Interview scheduled</strong><small>Aug 28</small>
+                  </div>
+                </div>
+                <div class="timeline-step current">
+                  <span>!</span>
+                  <div>
+                    <strong>Interview disrupted</strong
+                    ><small>Monitoring</small>
+                  </div>
+                </div>
+                <div class="timeline-step future">
+                  <span></span>
+                  <div>
+                    <strong>New appointment</strong
+                    ><small>Waiting for signal</small>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article class="product-card risk-card">
+              <div class="product-card-head">
+                <div>
+                  <span class="module-tag">03</span>
+                  <h3>Risk Watch</h3>
+                </div>
+                <span class="demo-chip">Demo</span>
+              </div>
+              <p>
+                Separate what needs attention from what does not — without
+                turning everything red.
+              </p>
+              <div class="risk-list">
+                <div><span>Medical</span><em class="risk-ok">Low risk</em></div>
+                <div><span>Passport</span><em class="risk-ok">Valid</em></div>
+                <div>
+                  <span>Police certificate</span
+                  ><em class="risk-watch">Watch</em>
+                </div>
+                <div>
+                  <span>Financial evidence</span
+                  ><em class="risk-neutral">Review</em>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
-        <div class="product-grid reveal">
-          <article class="product-card pulse-card">
-            <div class="product-card-head"><div><span class="module-tag">01</span><h3>Embassy Pulse</h3></div><span class="demo-chip">Demo</span></div>
-            <p>See rescheduling activity and applicant signals for the embassy that matters to you.</p>
-            <div class="mini-chart"><div class="mini-bars"><i style="height:28%"></i><i style="height:38%"></i><i style="height:33%"></i><i style="height:52%"></i><i style="height:48%"></i><i style="height:73%"></i><i style="height:66%"></i><i style="height:84%"></i></div><div class="mini-chart-labels"><span>Mon</span><span>Today</span></div></div>
-          </article>
-          <article class="product-card timeline-card">
-            <div class="product-card-head"><div><span class="module-tag">02</span><h3>Case Timeline</h3></div><span class="demo-chip">Demo</span></div>
-            <p>One chronological view from DQ to interview disruption to the next meaningful signal.</p>
-            <div class="timeline-ui"><div class="timeline-line"></div><div class="timeline-step done"><span>✓</span><div><strong>DQ complete</strong><small>May 12</small></div></div><div class="timeline-step done"><span>✓</span><div><strong>Interview scheduled</strong><small>Aug 28</small></div></div><div class="timeline-step current"><span>!</span><div><strong>Interview disrupted</strong><small>Monitoring</small></div></div><div class="timeline-step future"><span></span><div><strong>New appointment</strong><small>Waiting for signal</small></div></div></div>
-          </article>
-          <article class="product-card risk-card">
-            <div class="product-card-head"><div><span class="module-tag">03</span><h3>Risk Watch</h3></div><span class="demo-chip">Demo</span></div>
-            <p>Separate what needs attention from what does not — without turning everything red.</p>
-            <div class="risk-list"><div><span>Medical</span><em class="risk-ok">Low risk</em></div><div><span>Passport</span><em class="risk-ok">Valid</em></div><div><span>Police certificate</span><em class="risk-watch">Watch</em></div><div><span>Financial evidence</span><em class="risk-neutral">Review</em></div></div>
-          </article>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section pricing-section" id="pricing">
-      <div class="shell pricing-grid">
-        <div class="pricing-copy reveal">
-          <div class="section-kicker">VALIDATION OFFER</div>
-          <h2>If your case changes, uncertainty gets expensive.</h2>
-          <p>Missed travel, expiring medical exams, document renewals and weeks of uncertainty can cost far more than knowing what to watch.</p>
-          <div class="pricing-note"><span>◇</span><p><strong>No payment will be taken today.</strong> This is a transparent willingness-to-pay test for the product concept.</p></div>
+      <section class="section pricing-section" id="pricing">
+        <div class="shell pricing-grid">
+          <div class="pricing-copy reveal">
+            <div class="section-kicker">VALIDATION OFFER</div>
+            <h2>If your case changes, uncertainty gets expensive.</h2>
+            <p>
+              Missed travel, expiring medical exams, document renewals and weeks
+              of uncertainty can cost far more than knowing what to watch.
+            </p>
+            <div class="pricing-note">
+              <span>◇</span>
+              <p>
+                <strong>No payment will be taken today.</strong> This is a
+                transparent willingness-to-pay test for the product concept.
+              </p>
+            </div>
+          </div>
+          <div class="offer-card reveal" id="offerCard">
+            <div class="offer-top">
+              <span class="founder-chip">Founder validation</span>
+              <div class="offer-price">
+                <strong>$29</strong><span>one-time</span>
+              </div>
+            </div>
+            <h3>Founder Case Rescue</h3>
+            <p>
+              A future one-time dashboard for the moment your case stops
+              following the expected path.
+            </p>
+            <ul class="offer-list">
+              <li>Personalized case dashboard</li>
+              <li>Embassy disruption monitoring</li>
+              <li>Rescheduling intelligence</li>
+              <li>Expiry-risk timeline</li>
+              <li>Official policy alerts</li>
+              <li>Priority CaseShield updates</li>
+            </ul>
+            <button
+              class="btn btn-primary btn-lg full"
+              type="button"
+              id="purchaseIntent"
+            >
+              I’d pay $29 for this <span aria-hidden="true">→</span>
+            </button>
+            <small class="offer-foot"
+              >No card required · No charge · Validation only</small
+            >
+          </div>
         </div>
-        <div class="offer-card reveal" id="offerCard">
-          <div class="offer-top"><span class="founder-chip">Founder validation</span><div class="offer-price"><strong>$29</strong><span>one-time</span></div></div>
-          <h3>Founder Case Rescue</h3>
-          <p>A future one-time dashboard for the moment your case stops following the expected path.</p>
-          <ul class="offer-list"><li>Personalized case dashboard</li><li>Embassy disruption monitoring</li><li>Rescheduling intelligence</li><li>Expiry-risk timeline</li><li>Official policy alerts</li><li>Priority CaseShield updates</li></ul>
-          <button class="btn btn-primary btn-lg full" id="purchaseIntent">I’d pay $29 for this <span aria-hidden="true">→</span></button>
-          <small class="offer-foot">No card required · No charge · Validation only</small>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section privacy-section" id="privacy">
-      <div class="shell privacy-grid">
-        <div class="privacy-copy reveal">
-          <div class="section-kicker">PRIVACY BY DEFAULT</div>
-          <h2>Your immigration case is personal.<br><span>Our validation test doesn’t need your identity.</span></h2>
-          <p>We can test whether CaseShield is useful without asking you for the identifiers that make an immigration record sensitive.</p>
+      <section class="section privacy-section" id="privacy">
+        <div class="shell privacy-grid">
+          <div class="privacy-copy reveal">
+            <div class="section-kicker">PRIVACY BY DEFAULT</div>
+            <h2>
+              Your immigration case is personal.<br /><span
+                >Our validation test doesn’t need your identity.</span
+              >
+            </h2>
+            <p>
+              We can test whether CaseShield is useful without asking you for
+              the identifiers that make an immigration record sensitive.
+            </p>
+          </div>
+          <div class="privacy-panel reveal">
+            <div class="privacy-col privacy-no">
+              <div class="privacy-title">
+                <span class="privacy-icon no">×</span
+                ><strong>We do NOT collect</strong>
+              </div>
+              <ul>
+                <li>A-number</li>
+                <li>Passport number</li>
+                <li>USCIS receipt number</li>
+                <li>NVC case number</li>
+                <li>SSN</li>
+                <li>Immigration documents</li>
+              </ul>
+            </div>
+            <div class="privacy-divider"></div>
+            <div class="privacy-col privacy-yes">
+              <div class="privacy-title">
+                <span class="privacy-icon yes">✓</span
+                ><strong>We currently measure</strong>
+              </div>
+              <ul>
+                <li>Visa category</li>
+                <li>Embassy / city</li>
+                <li>Type of disruption</li>
+                <li>Process timing</li>
+                <li>Product interest</li>
+                <li>Anonymous session funnel</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="privacy-panel reveal">
-          <div class="privacy-col privacy-no"><div class="privacy-title"><span class="privacy-icon no">×</span><strong>We do NOT collect</strong></div><ul><li>A-number</li><li>Passport number</li><li>USCIS receipt number</li><li>NVC case number</li><li>SSN</li><li>Immigration documents</li></ul></div>
-          <div class="privacy-divider"></div>
-          <div class="privacy-col privacy-yes"><div class="privacy-title"><span class="privacy-icon yes">✓</span><strong>We currently measure</strong></div><ul><li>Visa category</li><li>Embassy / city</li><li>Type of disruption</li><li>Process timing</li><li>Product interest</li><li>Anonymous session funnel</li></ul></div>
+      </section>
+
+      <section class="legal-section">
+        <div class="shell legal-card reveal">
+          <div class="legal-icon">i</div>
+          <div>
+            <strong>Independent information product</strong>
+            <p>
+              CaseShield is not USCIS, NVC, the U.S. Department of State, an
+              embassy, or a law firm. It does not guarantee immigration outcomes
+              or provide individualized legal advice. Where professional legal
+              judgment is needed, consult a licensed immigration attorney or
+              DOJ-accredited representative.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <section class="legal-section">
-      <div class="shell legal-card reveal">
-        <div class="legal-icon">i</div>
-        <div><strong>Independent information product</strong><p>CaseShield is not USCIS, NVC, the U.S. Department of State, an embassy, or a law firm. It does not guarantee immigration outcomes or provide individualized legal advice. Where professional legal judgment is needed, consult a licensed immigration attorney or DOJ-accredited representative.</p></div>
+    <footer class="footer">
+      <div class="shell footer-row">
+        <div class="brand footer-brand">
+          <span class="brand-mark" aria-hidden="true"
+            ><svg viewBox="0 0 40 40">
+              <path
+                d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z"
+                fill="#5B5CF6"
+              />
+              <circle cx="20" cy="15.1" r="2.1" fill="#fff" /></svg></span
+          ><span>CaseShield</span>
+        </div>
+        <p>Validation beta · August 2026</p>
+        <button class="text-button" type="button" data-scroll-check>
+          Build my plan →
+        </button>
       </div>
-    </section>
-  </main>
+    </footer>
 
-  <footer class="footer">
-    <div class="shell footer-row">
-      <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 3.7 32.2 8v9.5c0 8.6-5 15.3-12.2 19-7.2-3.7-12.2-10.4-12.2-19V8L20 3.7Z" fill="#5B5CF6"/><circle cx="20" cy="15.1" r="2.1" fill="#fff"/></svg></span><span>CaseShield</span></div>
-      <p>Validation beta · August 2026</p>
-      <button class="text-button" data-scroll-check>Check my case →</button>
+    <div class="mobile-cta" id="mobileCta">
+      <button class="btn btn-primary full" type="button" data-scroll-check>
+        Build my plan — free
+      </button>
     </div>
-  </footer>
 
-  <div class="mobile-cta" id="mobileCta"><button class="btn btn-primary full" data-scroll-check>Check my case — free</button></div>
-
-  <div class="modal-backdrop" id="purchaseModal" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-      <div class="modal-icon">✓</div>
-      <span class="modal-kicker">PURCHASE INTENT RECORDED</span>
-      <h2 id="modalTitle">Thank you — no payment was taken.</h2>
-      <p>CaseShield is currently validating demand. Your click helps us determine whether this product should be built.</p>
-      <div class="modal-note">No card information was requested or stored.</div>
-      <button class="btn btn-primary full" id="modalDone">Done</button>
+    <div class="modal-backdrop" id="purchaseModal" hidden>
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <button
+          class="modal-close"
+          type="button"
+          id="modalClose"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <div class="modal-icon">✓</div>
+        <span class="modal-kicker">PURCHASE INTENT RECORDED</span>
+        <h2 id="modalTitle">Thank you — no payment was taken.</h2>
+        <p>
+          CaseShield is currently validating demand. Your click helps us
+          determine whether this product should be built.
+        </p>
+        <div class="modal-note">
+          No card information was requested or stored.
+        </div>
+        <button class="btn btn-primary full" type="button" id="modalDone">
+          Done
+        </button>
+      </div>
     </div>
-  </div>
 
-  <script src="/app.js" defer></script>
-</body>
+    <script type="module" src="/app.js"></script>
+  </body>
 </html>
