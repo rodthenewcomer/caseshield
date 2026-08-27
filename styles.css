@@ -509,8 +509,9 @@ button {
   min-width: 190px;
 }
 .micro-card-a {
+  /* Sits clear of the shield score in the card's top-right corner. */
   right: -14px;
-  top: 92px;
+  top: 176px;
   animation: floatCard 6.2s ease-in-out infinite reverse;
 }
 .micro-card-b {
@@ -748,8 +749,12 @@ button {
   background: #f2f4f7;
   display: grid;
   place-items: center;
-  font-size: 17px;
+  color: #667085;
   flex: 0 0 auto;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .choice-card.selected .choice-icon {
   background: #e7e7ff;
@@ -2131,9 +2136,11 @@ body.modal-open {
     position: fixed;
     left: 12px;
     right: 12px;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 90;
-    transition: 0.25s;
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
   .mobile-cta.hidden {
     opacity: 0;
@@ -2144,7 +2151,7 @@ body.modal-open {
     box-shadow: 0 14px 38px rgba(91, 92, 246, 0.32);
   }
   body {
-    padding-bottom: 70px;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
   }
 }
 @media (max-width: 430px) {
@@ -2210,4 +2217,172 @@ body.modal-open {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Local SVG icon system
+   Replaces Unicode glyphs, which read as a coded prototype rather than a
+   product. Stroke inherits currentColor so state changes need no inline style.
+--------------------------------------------------------------------------- */
+.icon {
+  width: 19px;
+  height: 19px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.choice-card.selected .choice-icon {
+  background: #e7e7ff;
+  color: #4a4bd8;
+  transform: scale(1.04);
+}
+
+.choice-card.selected {
+  box-shadow:
+    0 0 0 3px rgba(91, 92, 246, 0.1),
+    0 6px 18px rgba(91, 92, 246, 0.08);
+}
+
+/* ---------------------------------------------------------------------------
+   Paid-search message match
+--------------------------------------------------------------------------- */
+/* An author `display` beats the UA stylesheet's [hidden] rule, so the empty
+   box must be suppressed explicitly. */
+.hero-match[hidden] {
+  display: none;
+}
+
+.hero-match {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: #f5f3ff;
+  border: 1px solid #e0deff;
+  color: #4a4bd8;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+  max-width: 640px;
+}
+
+/* ---------------------------------------------------------------------------
+   Conversion bridge from the result to the offer
+   Placed at the aha moment so the primary experiment is reachable without
+   scrolling through every trust section. Deliberately calm: the visitor has
+   just described an anxious immigration problem.
+--------------------------------------------------------------------------- */
+.offer-bridge {
+  margin: 22px 0 0;
+  padding: 22px;
+  border: 1px solid #d9daff;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fbfaff 0%, #f6f5ff 100%);
+  text-align: center;
+}
+
+.bridge-kicker {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  color: #5b5cf6;
+}
+
+.bridge-line {
+  margin: 10px auto 0;
+  max-width: 46ch;
+  color: #475467;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.bridge-price {
+  margin: 14px 0 16px;
+}
+
+.bridge-price strong {
+  font-size: 30px;
+  letter-spacing: -0.04em;
+  color: #111827;
+}
+
+.bridge-price span {
+  color: #98a2b3;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.offer-bridge .btn {
+  background: #fff;
+  border: 1px solid #c7c7ff;
+  color: #4a4bd8;
+}
+
+.offer-bridge .btn:hover {
+  background: #f9f9ff;
+  border-color: #a9aaff;
+}
+
+.bridge-note {
+  margin: 12px 0 0;
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+@media (max-width: 560px) {
+  .offer-bridge {
+    padding: 18px 16px;
+  }
+  .offer-bridge .btn {
+    width: 100%;
+  }
+}
+
+.footer-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #667085;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footer-links a:hover {
+  color: #5b5cf6;
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .footer-links {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Static-markup icons share the sizing of the scripted ones. */
+.lock-icon .icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: -2px;
+}
+
+.flow-icon .icon {
+  width: 21px;
+  height: 21px;
+}
+
+.pricing-note > span .icon {
+  width: 16px;
+  height: 16px;
 }

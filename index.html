@@ -21,7 +21,22 @@
       property="og:url"
       content="https://caseshield-validation.vercel.app/"
     />
+    <meta property="og:site_name" content="CaseShield" />
+    <meta
+      property="og:image"
+      content="https://caseshield-validation.vercel.app/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="CaseShield — your interview changed, your next move shouldn't be a guess."
+    />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://caseshield-validation.vercel.app/og.png"
+    />
     <link rel="canonical" href="https://caseshield-validation.vercel.app/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
@@ -85,6 +100,7 @@
                 >Your next move shouldn’t be a guess.</span
               >
             </h1>
+            <p class="hero-match" id="heroMatch" hidden></p>
             <p class="hero-sub">
               CaseShield organizes official updates, embassy-specific reports
               and your timeline into a clear plan of what to verify, what to
@@ -252,7 +268,7 @@
               <div>
                 <span class="step-label" id="stepLabel">Step 1 of 5</span>
                 <span class="privacy-inline"
-                  ><span class="lock-icon">◇</span> No case number
+                  ><span class="lock-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9.2C7.4 20.2 4 17 4 12V6z" /><path d="M9.2 12.2l2 2 3.6-3.8" /></svg></span> No case number
                   required</span
                 >
               </div>
@@ -332,6 +348,24 @@
                 ✓ Interest recorded for this validation test. We are not
                 collecting your email yet.
               </div>
+            </div>
+
+            <div class="offer-bridge">
+              <p class="bridge-kicker">FOUNDER CASE RESCUE</p>
+              <p class="bridge-line">
+                Keep this monitoring plan in one place, updated as your case
+                moves.
+              </p>
+              <p class="bridge-price">
+                <strong>$29</strong> <span>one-time</span>
+              </p>
+              <button class="btn btn-ghost" type="button" id="resultOfferLink">
+                See what Founder Case Rescue includes
+                <span aria-hidden="true">→</span>
+              </button>
+              <p class="bridge-note">
+                No payment is taken during this validation test.
+              </p>
             </div>
           </div>
         </div>
@@ -499,7 +533,7 @@
           </div>
           <div class="flow-diagram reveal">
             <div class="flow-source">
-              <div class="flow-icon official">◎</div>
+              <div class="flow-icon official"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21a9 9 0 100-18 9 9 0 000 18z" /><path d="M3 12h18" /><path d="M12 3a14 14 0 000 18 14 14 0 000-18" /></svg></div>
               <div>
                 <strong>Official sources</strong
                 ><span
@@ -508,14 +542,14 @@
               </div>
             </div>
             <div class="flow-source">
-              <div class="flow-icon community">◌</div>
+              <div class="flow-icon community"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 11.5a4 4 0 100-8 4 4 0 000 8z" /><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" /></svg></div>
               <div>
                 <strong>Anonymous applicant signals</strong
                 ><span>Cancelled · new date · visa category · embassy</span>
               </div>
             </div>
             <div class="flow-source">
-              <div class="flow-icon timeline">⌁</div>
+              <div class="flow-icon timeline"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h3.8L9 5.5l4 13 2.2-6.5H21" /></svg></div>
               <div>
                 <strong>Case timeline</strong
                 ><span
@@ -660,7 +694,7 @@
               of uncertainty can cost far more than knowing what to watch.
             </p>
             <div class="pricing-note">
-              <span>◇</span>
+              <span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9.2C7.4 20.2 4 17 4 12V6z" /><path d="M9.2 12.2l2 2 3.6-3.8" /></svg></span>
               <p>
                 <strong>No payment will be taken today.</strong> This is a
                 transparent willingness-to-pay test for the product concept.
@@ -778,6 +812,10 @@
               <circle cx="20" cy="15.1" r="2.1" fill="#fff" /></svg></span
           ><span>CaseShield</span>
         </div>
+        <nav class="footer-links" aria-label="Legal">
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms &amp; disclaimer</a>
+        </nav>
         <p>Validation beta · August 2026</p>
         <button class="text-button" type="button" data-scroll-check>
           Build my plan →

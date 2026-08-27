@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy — CaseShield</title>
+    <meta
+      name="description"
+      content="What CaseShield collects during its validation beta, what it never collects, and how long anything is kept."
+    />
+    <link rel="canonical" href="https://caseshield-validation.vercel.app/privacy.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/legal.css" />
+  </head>
+  <body>
+    <main class="doc">
+      <p class="back"><a href="/">← Back to CaseShield</a></p>
+      <p class="kicker">Plain language</p>
+      <h1>Privacy</h1>
+      <p class="lede">
+        CaseShield is in validation beta. It is an information and monitoring
+        product, not a case-management system, and it is built so that it
+        cannot hold your immigration identifiers even if someone asked it to.
+      </p>
+
+      <h2>What CaseShield collects</h2>
+      <ul>
+        <li>
+          <strong>An anonymous session ID.</strong> A random value generated in
+          your browser. It carries no identity and exists only so that one
+          visitor reloading a page is not counted as several people.
+        </li>
+        <li>
+          <strong>Your assessment answers.</strong> The disruption type, visa
+          category, embassy or city, where you are in the process, and what
+          matters most to you right now.
+        </li>
+        <li>
+          <strong>Product-interest events.</strong> Which steps you reached and
+          whether you clicked the alert or $29 buttons.
+        </li>
+        <li>
+          <strong>Campaign attribution.</strong> If you arrived from an ad or a
+          link, the campaign parameters in the address and the
+          <em>host name</em> of the site you came from — for example
+          <code>google.com</code>.
+        </li>
+      </ul>
+
+      <h2>What CaseShield never collects</h2>
+      <ul class="never">
+        <li>A-number</li>
+        <li>USCIS receipt number</li>
+        <li>NVC case number</li>
+        <li>Passport number</li>
+        <li>Social Security number</li>
+        <li>Date of birth</li>
+        <li>Immigration documents or uploads</li>
+        <li>Your name or email address</li>
+        <li>Card or payment details</li>
+      </ul>
+      <p>
+        If something that looks like a case number is typed into the embassy
+        field, your browser refuses it before anything is sent, and the server
+        redacts it again if it arrives by any other route.
+      </p>
+
+      <h2>About your IP address</h2>
+      <p>
+        Your network address is used only to count requests per minute so the
+        site cannot be flooded. That counter expires within two minutes and
+        your address is never written into an analytics record, never stored
+        alongside your answers, and never used for attribution or profiling.
+      </p>
+
+      <h2>The full address of the page you came from</h2>
+      <p>
+        Only the host name is kept. The rest of a referring address is
+        discarded, because a search result address can contain the words you
+        typed into a search engine, and those are not ours to hold.
+      </p>
+
+      <h2>Where the data lives, and for how long</h2>
+      <ul>
+        <li>
+          Analytics are stored with Upstash, a managed Redis provider, and the
+          site is hosted on Vercel.
+        </li>
+        <li>
+          Aggregate totals — how many unique sessions reached each step — are
+          kept for as long as the validation test runs.
+        </li>
+        <li>Day-by-day breakdowns are deleted automatically after 90 days.</li>
+        <li>
+          A rolling sample of the most recent 500 events is kept for
+          diagnostics. Older events fall out of it automatically.
+        </li>
+      </ul>
+
+      <h2>No payment is taken</h2>
+      <p>
+        The $29 action measures whether the product is worth paying for. No
+        charge is made, no card is collected, and no checkout exists.
+      </p>
+
+      <h2>What CaseShield is not</h2>
+      <p>
+        CaseShield is an independent product. It is not affiliated with, or
+        endorsed by, any U.S. government agency. It is not a law firm and does
+        not provide individualized legal advice, and it does not predict
+        whether a case will be approved.
+      </p>
+
+      <h2>Questions or a security report</h2>
+      <p>
+        Security issues can be reported through a private GitHub security
+        advisory on the project repository. Please do not include real
+        immigration identifiers or documents in a report.
+      </p>
+
+      <p class="updated">Last updated 27 August 2026.</p>
+    </main>
+  </body>
+</html>

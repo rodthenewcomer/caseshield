@@ -1,0 +1,141 @@
+:root {
+  --bg: #f8f9fc;
+  --panel: #ffffff;
+  --border: #e4e7ec;
+  --ink: #111827;
+  --muted: #475467;
+  --faint: #98a2b3;
+  --accent: #5b5cf6;
+  --danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
+}
+
+.doc {
+  width: min(100% - 40px, 720px);
+  margin: 0 auto;
+  padding: 44px 0 96px;
+}
+
+.back a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.back a:hover {
+  text-decoration: underline;
+}
+
+.kicker {
+  margin: 32px 0 0;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+h1 {
+  font-size: clamp(32px, 5vw, 44px);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 10px 0 18px;
+}
+
+h2 {
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  margin: 40px 0 10px;
+}
+
+.lede {
+  font-size: 17px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+p {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+li {
+  margin-bottom: 9px;
+}
+
+strong {
+  color: var(--ink);
+}
+
+code {
+  background: #f2f4f7;
+  border-radius: 5px;
+  padding: 1px 5px;
+  font-size: 13px;
+}
+
+.never {
+  list-style: none;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4px 18px;
+}
+
+.never li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.never li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  color: var(--danger);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+a {
+  color: var(--accent);
+}
+
+.updated {
+  margin-top: 44px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  color: var(--faint);
+  font-size: 13px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

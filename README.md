@@ -12,24 +12,47 @@ Live site: <https://caseshield-validation.vercel.app/>
 - No email, identity document or sensitive immigration identifier is collected.
 - CaseShield is independent, is not affiliated with a U.S. government agency and does not provide individualized legal advice.
 
+Public policy pages live at [`/privacy.html`](privacy.html) and [`/terms.html`](terms.html).
+
 ## Validation funnel
 
-- `page_view`
-- `hero_cta_click`
-- `case_check_started`
-- `case_step_1` through `case_step_5`
-- `case_check_completed`
-- `alert_intent`
-- `pricing_view`
-- `purchase_intent_29`
+The funnel is deliberately not one flat sequence. Treating an optional action as a mandatory stage divides a conversion by the wrong denominator, which is how a validation dashboard quietly lies to its owner.
 
-Events are accepted only through a same-origin, JSON-only serverless endpoint with a narrow allowlist and a 4 KB body limit. Probable case numbers entered as an embassy value are redacted.
+**Core funnel** — the mandatory path:
+
+`page_view` → `case_check_started` → `case_step_1` … `case_step_5` → `case_check_completed`
+
+**Diagnostic events** — real, but optional:
+
+`hero_cta_click`, `alert_intent`, `pricing_view`, `result_offer_click`, `purchase_intent_29`
+
+`hero_cta_click` is intent to begin; `case_check_started` fires only on the first genuine interaction with a question. Keeping them apart stops two metrics from measuring the same thing.
+
+## The decision metric
+
+**Qualified WTP** = |completed ∩ purchase_intent_29| ÷ |completed|
+
+It is an exact Redis set intersection (`SINTERCARD`), never a ratio of two independent totals. A visitor who scrolls straight to pricing and clicks $29 without running a case check is real interest — reported as `unqualified_intents` — but is excluded from the numerator.
+
+The same intersection is applied inside each campaign cohort, so an ad is judged on the visitors it actually sent.
+
+## Acquisition attribution
+
+First touch is captured once and never overwritten: an ad that brought someone in keeps the credit when they return directly.
+
+Captured: `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, and the referrer **host**. Never captured: the full referrer URL or its query string, click identifiers, or anything identifying a person.
+
+Cohort and answer registries are capped, so an ad platform emitting arbitrary `utm_term` values cannot explode the Redis key space.
+
+Paid-search message match maps a small trusted enum of `utm_content` values (`cancelled`, `rescheduled`, `no_date`, `nvc_delay`) to prewritten hero copy. Arbitrary UTM text is never rendered on the page.
+
+Events are accepted only through a same-origin, JSON-only serverless endpoint with strict allowlists and a 4 KB body limit. Probable case numbers are redacted, including out of campaign parameters.
 
 ## Event persistence
 
 Events are written to Upstash Redis over its REST API, so the runtime stays dependency-free.
 
-Unique-session sets are the funnel's source of truth: a visitor who reloads five times counts once, so each stage reads as people rather than hits. Per stage the store keeps a unique-session set, a raw counter and a 90-day daily set; a capped list of the most recent events supports segment analysis.
+Unique-session sets are the source of truth: a visitor who reloads five times counts once, so every stage reads as people rather than hits. Per stage the store keeps a unique-session set, a raw counter and a 90-day daily set; per-cohort and per-answer sets back the acquisition and problem-mix tables.
 
 Storage is optional by design. With no credentials the endpoint still validates, logs and returns `200` with `stored: false` — analytics can never take the product down.
 
@@ -40,7 +63,7 @@ vercel env add VALIDATION_TOKEN     # openssl rand -hex 32
 
 ## Validation dashboard
 
-`/validation` reads the funnel: unique sessions, reach, stage-to-stage conversion, the biggest drop-off and the answer mix behind it. The headline metric is **completion → $29 intent** — of the people who finish the assessment, how many ask to pay.
+`/validation` reports Qualified WTP, the core funnel with its biggest drop-off, optional actions measured against completers, an acquisition cohort table and the problem mix — all as unique sessions. Sample size is labelled honestly: `directional` under 20 completions, `early` under 100, `decision` at 100 or more.
 
 The dashboard is internal. `/api/validation` requires a bearer token compared in constant time and fails closed when `VALIDATION_TOKEN` is unset; the page and route are excluded from `robots.txt`, carry `noindex` and are never linked from the public site.
 
@@ -54,17 +77,24 @@ npm run verify
 npx vercel dev
 ```
 
-`npm run verify` checks the product boundary, CSP and source structure, then runs the endpoint, store and monitoring-plan tests. It needs no network and no credentials.
+`npm run verify` checks the product boundary, CSP and source structure, then runs the endpoint, store, funnel, attribution and monitoring-plan tests. It needs no network and no credentials.
 
-An optional real-browser pass drives the five-step assessment and fails on any console error. Playwright is deliberately not a project dependency, so CI stays fast:
+An optional real-browser pass drives the product for real. Playwright is deliberately not a project dependency, so CI stays fast:
 
 ```sh
 npm i --no-save playwright && npx playwright install chromium
-npm run smoke                       # add BASE_URL=... to test a deployment
+npm run smoke                        # local static server
+BASE_URL=https://… npm run smoke     # a real deployment
+SHOTS=work/after npm run smoke       # also capture responsive screenshots
+node scripts/og-image.mjs            # regenerate the social card
 ```
+
+The smoke run covers three scenarios: a paid click through the whole journey, a completion that skips alert intent, and a $29 click with no completion at all — the case that must stay out of Qualified WTP.
 
 ## Deployment
 
-The project is configured for Vercel through `vercel.json`. Production deploys are expected to come from the `main` branch after the Quality workflow passes.
+The project is configured for Vercel through `vercel.json`. Production deploys come from the `main` branch after the Quality workflow passes.
+
+Preview deployments currently share the production Upstash database, so any preview testing writes into the live dataset. Flush synthetic data afterwards, or provision a separate preview store before real traffic arrives.
 
 See [SECURITY.md](SECURITY.md) for the privacy boundary and vulnerability-reporting path.
