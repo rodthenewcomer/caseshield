@@ -27,14 +27,20 @@ test("rate limiting fails open so analytics cannot break the product", async () 
   assert.equal(result.limited, false);
 });
 
-test("keys are namespaced and versioned", () => {
-  assert.equal(keys.unique("page_view"), "cs:v1:uniq:page_view");
-  assert.equal(keys.count("page_view"), "cs:v1:count:page_view");
+test("keys are namespaced by version and environment", () => {
+  // No VERCEL_ENV in tests, so the safe default namespace applies.
+  assert.equal(keys.unique("page_view"), "cs:v1:dev:uniq:page_view");
+  assert.equal(keys.count("page_view"), "cs:v1:dev:count:page_view");
   assert.equal(
     keys.campaign("google|cpc|x|y|z", "case_check_completed"),
-    "cs:v1:camp:google|cpc|x|y|z:case_check_completed",
+    "cs:v1:dev:camp:google|cpc|x|y|z:case_check_completed",
   );
-  assert.equal(keys.answer("visa", "cr1-ir1-spouse"), "cs:v1:ans:visa:cr1-ir1-spouse");
+  assert.equal(
+    keys.answer("visa", "cr1-ir1-spouse"),
+    "cs:v1:dev:ans:visa:cr1-ir1-spouse",
+  );
+  assert.equal(keys.sessions(), "cs:v1:dev:sessions");
+  assert.equal(keys.rateLimit(1, "203.0.113.9"), "cs:v1:dev:rl:1:203.0.113.9");
 });
 
 test("segment registries are capped against key explosion", () => {

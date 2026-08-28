@@ -117,3 +117,43 @@ test("survives storage being unavailable", async () => {
   const { attributionPayload } = await freshModule();
   assert.equal(attributionPayload().utm_source, "google");
 });
+
+test("operator traffic can opt out of being counted", async () => {
+  const store = browser({ search: "?cs_internal=1" });
+  const opted = await freshModule();
+  assert.equal(opted.isInternalTraffic(), true);
+  assert.equal(store.get("caseshield_internal"), "1");
+
+  // The flag persists across later visits without the parameter.
+  globalThis.location = { search: "", hostname: "caseshield-validation.vercel.app" };
+  const later = await freshModule();
+  assert.equal(later.isInternalTraffic(), true);
+
+  // And can be cleared deliberately.
+  globalThis.location = { search: "?cs_internal=0", hostname: "caseshield-validation.vercel.app" };
+  const cleared = await freshModule();
+  assert.equal(cleared.isInternalTraffic(), false);
+});
+
+test("ordinary visitors are never treated as internal", async () => {
+  browser({ search: "?utm_source=google" });
+  const normal = await freshModule();
+  assert.equal(normal.isInternalTraffic(), false);
+});
+
+test("opt-out survives storage being unavailable", async () => {
+  browser({ search: "?cs_internal=1" });
+  globalThis.localStorage = {
+    getItem() {
+      throw new Error("blocked");
+    },
+    setItem() {
+      throw new Error("blocked");
+    },
+    removeItem() {
+      throw new Error("blocked");
+    },
+  };
+  const blocked = await freshModule();
+  assert.equal(blocked.isInternalTraffic(), false, "fails open, never blocks tracking");
+});

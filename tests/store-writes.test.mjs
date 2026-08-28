@@ -65,15 +65,15 @@ test("records a campaign-attributed completion without throwing", async () => {
 
     const commands = batches.flat().map((command) => command.join(" "));
     assert.ok(
-      commands.some((c) => c.startsWith("SADD cs:v1:uniq:case_check_completed")),
+      commands.some((c) => c.startsWith("SADD cs:v1:dev:uniq:case_check_completed")),
       "unique-session set is written",
     );
     assert.ok(
-      commands.some((c) => c.includes("cs:v1:camp:google|cpc|")),
+      commands.some((c) => c.includes("cs:v1:dev:camp:google|cpc|")),
       "cohort membership is written",
     );
     assert.ok(
-      commands.some((c) => c.startsWith("SADD cs:v1:ans:visa:cr1-ir1-spouse")),
+      commands.some((c) => c.startsWith("SADD cs:v1:dev:ans:visa:cr1-ir1-spouse")),
       "answer segment is written as a session set",
     );
   } finally {
@@ -100,7 +100,7 @@ test("buckets a new cohort into overflow once the registry is full", async () =>
     await recordEvent(EVENT);
     const commands = batches.flat().map((command) => command.join(" "));
     assert.ok(
-      commands.some((c) => c === "SADD cs:v1:campaigns other"),
+      commands.some((c) => c === "SADD cs:v1:dev:campaigns other"),
       "unknown cohort past the cap becomes 'other'",
     );
   } finally {

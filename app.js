@@ -2,6 +2,7 @@ import { createCasePlan } from "/intelligence.js";
 import {
   attributionPayload,
   heroVariant,
+  isInternalTraffic,
 } from "/acquisition.js";
 
 (() => {
@@ -231,7 +232,12 @@ import {
     }
   }
 
+  // Resolved once per page load so the flag cannot change mid-session.
+  const internalTraffic = isInternalTraffic();
+
   async function track(name, meta = {}) {
+    if (internalTraffic) return;
+
     const payload = {
       name,
       session_id: getSessionId(),

@@ -61,6 +61,51 @@ vercel integration add upstash      # injects KV_REST_API_URL and KV_REST_API_TO
 vercel env add VALIDATION_TOKEN     # openssl rand -hex 32
 ```
 
+## Environment isolation
+
+Preview traffic reaching the production dataset would corrupt the numbers that
+decide whether to fund this company, so isolation is enforced in two layers.
+
+**Separate stores.** Production and Preview should hold different Upstash
+credentials. Development deliberately has none: without them the endpoint still
+answers `200` with `stored:false`, so local work cannot touch a real dataset.
+
+**Namespaced keys.** Every key carries its environment:
+
+```
+cs:v1:prod:uniq:case_check_completed
+cs:v1:preview:uniq:case_check_completed
+```
+
+The namespace comes from `VERCEL_ENV` through a frozen enum
+(`production→prod`, `preview→preview`, `development→dev`, anything else→`dev`).
+`VERCEL_ENV` is never interpolated into a key, so an unexpected value cannot
+become key material. This holds even if someone later points Preview at the
+production database by mistake.
+
+`ANALYTICS_STORE_ENV` optionally declares which store the credentials belong
+to. When it disagrees with the actual environment, `/validation` shows a
+configuration warning rather than silently trusting the setup. The dashboard
+also states the environment and a short store fingerprint, so two environments
+sharing one database is visible at a glance.
+
+### Cleaning up test data
+
+Never issue a database-wide flush: with a shared database it destroys the
+production dataset. Use the namespace-scoped script, which refuses any key
+outside the target namespace:
+
+```sh
+npm run flush -- preview          # dry run, lists what would go
+npm run flush -- preview --apply  # deletes only cs:v1:preview:*
+```
+
+### Excluding your own visits
+
+Loading the live site to check on it would otherwise register as an ordinary
+session and dilute every stage denominator. Visit `/?cs_internal=1` once to
+stop being counted, `/?cs_internal=0` to undo.
+
 ## Validation dashboard
 
 `/validation` reports Qualified WTP, the core funnel with its biggest drop-off, optional actions measured against completers, an acquisition cohort table and the problem mix — all as unique sessions. Sample size is labelled honestly: `directional` under 20 completions, `early` under 100, `decision` at 100 or more.
@@ -95,6 +140,6 @@ The smoke run covers three scenarios: a paid click through the whole journey, a 
 
 The project is configured for Vercel through `vercel.json`. Production deploys come from the `main` branch after the Quality workflow passes.
 
-Preview deployments currently share the production Upstash database, so any preview testing writes into the live dataset. Flush synthetic data afterwards, or provision a separate preview store before real traffic arrives.
+Preview and Production analytics are namespaced separately, so preview testing cannot enter the production dataset. They currently share one Upstash database (the free plan allows a single database), which is safe for correctness but means a database-wide flush would destroy both — always use `npm run flush -- <namespace>`. Provisioning a second database and repointing the Preview credentials is a configuration change only; no code change is needed.
 
 See [SECURITY.md](SECURITY.md) for the privacy boundary and vulnerability-reporting path.

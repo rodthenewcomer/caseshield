@@ -186,7 +186,39 @@ function renderAnswers(answers) {
   }
 }
 
+/**
+ * Operator context. Reading a Preview dashboard while believing it is
+ * Production would be an expensive mistake, so the environment is always
+ * stated, along with a fingerprint that reveals when two environments share
+ * one store.
+ */
+function renderEnvironment(environment) {
+  const banner = $("envBanner");
+  if (!environment) {
+    banner.hidden = true;
+    return;
+  }
+
+  const parts = [`Environment: ${environment.label}`];
+  if (environment.store_fingerprint) {
+    parts.push(`store ${environment.store_fingerprint}`);
+  }
+  const line = $("envLine");
+  line.textContent = parts.join(" · ");
+  line.className = `env ${environment.slug === "prod" ? "prod" : "nonprod"}`;
+
+  const warnings = $("envWarnings");
+  warnings.replaceChildren();
+  for (const warning of environment.warnings || []) {
+    warnings.append(element("p", "warn", warning));
+  }
+
+  banner.hidden = false;
+}
+
 function render(data) {
+  renderEnvironment(data.environment);
+
   if (!data.configured) {
     setStatus(
       "Connected, but no event store is configured. Set KV_REST_API_URL and KV_REST_API_TOKEN on the project, then redeploy.",

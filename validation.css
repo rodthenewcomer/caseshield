@@ -249,3 +249,36 @@ input:focus-visible,
   background: #ecfdf3;
   color: var(--good);
 }
+
+.env {
+  margin: 22px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--border);
+}
+
+.env.prod {
+  border-color: #abefc6;
+  background: #ecfdf3;
+  color: var(--good);
+}
+
+.env.nonprod {
+  border-color: #fedf89;
+  background: #fffaeb;
+  color: var(--warn);
+}
+
+.warn {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.5;
+}

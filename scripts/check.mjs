@@ -14,6 +14,8 @@ const requiredFiles = [
   "lib/funnel.mjs",
   "lib/redis.mjs",
   "lib/attribution.mjs",
+  "lib/environment.mjs",
+  "scripts/flush-namespace.mjs",
   "validation.html",
   "validation.js",
   "robots.txt",
@@ -170,6 +172,42 @@ assert.match(
   contents["acquisition.js"],
   /SAFE_CONTENT_VARIANTS/,
   "Hero copy must come from a trusted enum, not raw UTM text.",
+);
+
+// Preview traffic must never reach the production dataset.
+assert.match(
+  contents["lib/store.mjs"],
+  /keyPrefix\(\)/,
+  "Redis keys must be namespaced by environment.",
+);
+assert.match(
+  contents["lib/environment.mjs"],
+  /Object\.freeze\(/,
+  "Environment slugs must come from a frozen enum.",
+);
+assert.doesNotMatch(
+  contents["lib/environment.mjs"],
+  /`\$\{[^}]*VERCEL_ENV[^}]*\}`/,
+  "VERCEL_ENV must never be interpolated into a key or template directly.",
+);
+assert.match(
+  contents["lib/environment.mjs"],
+  /Object\.hasOwn\(SLUGS, raw\)/,
+  "An unrecognised environment must fall back, never become key material.",
+);
+
+// A shared database makes FLUSHDB a production-data-loss event.
+for (const file of ["scripts/flush-namespace.mjs", "lib/store.mjs", "lib/funnel.mjs"]) {
+  assert.doesNotMatch(
+    contents[file],
+    /FLUSHDB|FLUSHALL/,
+    `${file} must never issue a database-wide flush.`,
+  );
+}
+assert.match(
+  contents["scripts/flush-namespace.mjs"],
+  /key\.startsWith\(PREFIX\)/,
+  "Namespace cleanup must refuse keys outside the target namespace.",
 );
 
 console.log(`CaseShield source checks passed (${requiredFiles.length} files).`);

@@ -27,6 +27,17 @@ Retention: aggregate unique-session totals persist for the life of the validatio
   field, since a crafted ad URL is a real vector
 - Per-IP rate limiting that fails open so analytics never breaks the product
 
+## Environment isolation
+
+Analytics keys are namespaced by environment (`cs:v1:prod:`, `cs:v1:preview:`,
+`cs:v1:dev:`) from a frozen enum, so preview or local traffic can never enter
+the production dataset. Development carries no store credentials at all.
+
+The internal dashboard states which environment it is reading and warns when
+the configured store does not match it. A short, non-reversible fingerprint of
+the store host is shown so a shared database is visible; the URL and token are
+never exposed.
+
 ## Internal dashboard
 
 `/validation` and `/api/validation` expose business metrics and are not public. Access requires a bearer token compared in constant time, the route fails closed when `VALIDATION_TOKEN` is unset, and both are excluded from `robots.txt` and marked `noindex`.

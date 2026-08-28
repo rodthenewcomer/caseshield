@@ -111,7 +111,14 @@ const errors = [];
 
 async function newPage(viewport = { width: 1440, height: 900 }) {
   // A fresh context clears storage, so each scenario is a distinct visitor.
-  const context = await browser.newContext({ viewport });
+  // BYPASS_TOKEN lets the run reach a protected Preview deployment.
+  const bypass = process.env.BYPASS_TOKEN;
+  const context = await browser.newContext({
+    viewport,
+    ...(bypass
+      ? { extraHTTPHeaders: { "x-vercel-protection-bypass": bypass } }
+      : {}),
+  });
   const page = await context.newPage();
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(`console: ${msg.text()}`);

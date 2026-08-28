@@ -73,6 +73,28 @@ function capture() {
   return touch;
 }
 
+const INTERNAL_KEY = "caseshield_internal";
+
+/**
+ * Operator opt-out.
+ *
+ * The team loading the live site to check on it would otherwise register as
+ * ordinary sessions, inflating reach and diluting every stage denominator —
+ * which matters most at exactly the small sample a first ad test produces.
+ *
+ * Visit /?cs_internal=1 once to stop being counted, /?cs_internal=0 to undo.
+ */
+export function isInternalTraffic() {
+  try {
+    const flag = new URLSearchParams(location.search).get("cs_internal");
+    if (flag === "1") localStorage.setItem(INTERNAL_KEY, "1");
+    if (flag === "0") localStorage.removeItem(INTERNAL_KEY);
+    return localStorage.getItem(INTERNAL_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 /** Read the stored first touch, capturing it on the very first visit only. */
 export function getFirstTouch() {
   try {
